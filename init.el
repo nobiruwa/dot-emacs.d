@@ -426,7 +426,8 @@
 (define-key eclim-mode-map (kbd "M-TAB") 'auto-complete)
 ;; define eclimd start function
 (defun eclim-start-eclimd (workspace)
-  (interactive "Dworkspace:")
+  (interactive (list (read-directory-name "workspace: "
+                                          "~/workspace/")))
   (let* ((eclimd-executable (expand-file-name "~/opt/eclipse/eclimd"))
         (eclimd-workspace-option (mapconcat 'identity (list "-Dosgi.instance.area.default=\"" (expand-file-name workspace) "\"") ""))
         (command (mapconcat 'identity (list eclimd-executable eclimd-workspace-option "&") " ")))
