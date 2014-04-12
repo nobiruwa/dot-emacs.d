@@ -470,7 +470,7 @@
 ;;;;;;;;
 ;; howm
 ;;;;;;;;
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/howm/"))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/howm/site-lisp"))
 ;; キーの再割り当て
 (setq howm-prefix "\C-z,")
 ;; howm開始
