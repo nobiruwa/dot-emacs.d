@@ -412,7 +412,7 @@
 (add-to-list 'load-path (expand-file-name "~/repo/emacs-eclim.git/vendor"))
 (require 'eclim)
 (setq eclim-auto-save t)
-(setq eclim-executable "~/.eclipse/eclim")
+(setq eclim-executable "~/opt/eclipse/eclim")
 (global-eclim-mode 1)
 
 ;;(setq help-at-pt-display-when-idle t)
