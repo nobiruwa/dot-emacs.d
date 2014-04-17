@@ -458,6 +458,14 @@
 (require 'jedi)
 (setq jedi:environment-virtualenv
       (list "virtualenv-3.3" "--system-site-packages"))
+(defun jedi:start-dedicated-server2 ()
+  (interactive)
+  (let* ((cmds '("~/.emacs.d/.python-environments/python2.7/bin/jediepcserver"))
+        (args '("--sys-path" "/usr/lib/python2.7/dist-packages")))
+    (when cmds (set (make-local-variable 'jedi:server-command) cmds))
+    (when args (set (make-local-variable 'jedi:server-args) args))
+    (setq jedi:epc nil)
+    (jedi:start-server)))
 (setq jedi:key-complete (kbd "<M-tab>"))
 (setq jedi:key-goto-definition (kbd "C-c ."))
 (setq jedi:key-show-doc (kbd "C-c d"))
@@ -577,6 +585,26 @@
 (require 'java-mode-indent-annotations)
 (add-hook 'java-mode-hook '(lambda ()
                              (java-mode-indent-annotations-setup)))
+
+;;;;;;;
+;; jshint-mode
+;;;;;;;
+(add-to-list 'load-path (expand-file-name "~/repo/jshint-mode.git"))
+(require 'flymake-jshint)
+;; 下記の内容のjshint-curlと組み合わせて使う
+;; #!/bin/sh
+;; curl --silent --form source=<"$1" --form filename="$1" --form mode="$2" --form jshintrc="$3" $4 | sed -e "s;^\(Lint\);$1:\1;"
+(defun jshint-curl ()
+  (interactive)
+  (shell-command 
+   (let* ((local-file buffer-file-name)
+          (jshint-url (format "http://%s:%d/check" jshint-mode-host jshint-mode-port))
+          (jshintrc (if (string= "" jshint-mode-jshintrc)
+                        (expand-file-name
+                         ".jshintrc"
+                         (locate-dominating-file default-directory ".jshintrc"))
+                      jshint-mode-jshintrc)))
+     (mapconcat 'identity (list "jshint-curl" local-file jshint-mode-mode jshintrc jshint-url) " "))))
 ;;;;;;;;
 ;; js2-mode
 ;; It will refuse to run unless you have byte-compiled it. 
@@ -586,6 +614,17 @@
 (add-to-list 'load-path (expand-file-name "~/repo/js2-mode.git"))
 (autoload 'js2-mode "js2-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+(setq jshint-cli "jshint ")
+(add-to-list 'compilation-error-regexp-alist-alist
+             '(jshint-cli "^\\(.*\\): line \\([[:digit:]]+\\), col \\([[:digit:]]+\\)" 1 2 3 ))
+(add-to-list 'compilation-error-regexp-alist
+             'jshint-cli)
+(add-hook 'js2-mode-hook
+     (lambda () 
+       (make-local-variable 'compile-command)
+       (setq compile-command (concat jshint-cli buffer-file-name))
+       (flymake-mode 1)))
+
 
 ;;;;;;;;
 ;; my-utf-8-eaw-fullwidth.el
