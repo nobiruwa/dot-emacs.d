@@ -504,8 +504,8 @@
 ;;; Ref: http://howm.sourceforge.jp/cgi-bin/hiki/hiki.cgi?ReverseDoneReminder
 ;; ToDo リストで「.」が新しい順に並んでほしい. 
 (defadvice howm-todo-priority-done 
-		   (around reverse-order (late lz item) activate) 
-		   (setq late (- late)) ad-do-it) 
+  (around reverse-order (late lz item) activate) 
+  (setq late (- late)) ad-do-it) 
 ;; しかもメニューに「.」が表示されてほしい. 
 (defvar howm-huge++ 99999) 
 (setq howm-menu-todo-priority (- howm-huge++))
@@ -593,18 +593,32 @@
 (require 'flymake-jshint)
 ;; 下記の内容のjshint-curlと組み合わせて使う
 ;; #!/bin/sh
-;; curl --silent --form source=<"$1" --form filename="$1" --form mode="$2" --form jshintrc="$3" $4 | sed -e "s;^\(Lint\);$1:\1;"
+;; FILENAME="$1"
+;; JSHINTMODE="$2"
+;; JSHINTRC="$3"
+;; URL="$4"
+;; curl --silent --form source=\<"$FILENAME" --form filename="$FILENAME" --form mode="$JSHINTMODE" --form jshintrc="$JSHINTRC" $URL | grep '\(^Lint at \|No problems \)' | sed -e "s;^\(Lint\);$1:\1;"
+(defun quote-name (name)
+  (if (string-match " " name)
+      (concat "'" name "'")
+    name))
+(defun jshint-make-curl-command ()
+  (let* ((local-file (quote-name buffer-file-name))
+         (jshint-url (format "http://%s:%d/check" jshint-mode-host jshint-mode-port))
+         (jshintrc
+          (quote-name
+           (if (string= "" jshint-mode-jshintrc)
+               (expand-file-name ".jshintrc" (locate-dominating-file default-directory ".jshintrc"))
+             jshint-mode-jshintrc))))
+     (mapconcat 'identity (list "jshint-curl" local-file jshint-mode-mode jshintrc jshint-url) " ")))
 (defun jshint-curl ()
   (interactive)
-  (shell-command 
-   (let* ((local-file buffer-file-name)
-          (jshint-url (format "http://%s:%d/check" jshint-mode-host jshint-mode-port))
-          (jshintrc (if (string= "" jshint-mode-jshintrc)
-                        (expand-file-name
-                         ".jshintrc"
-                         (locate-dominating-file default-directory ".jshintrc"))
-                      jshint-mode-jshintrc)))
-     (mapconcat 'identity (list "jshint-curl" local-file jshint-mode-mode jshintrc jshint-url) " "))))
+  (shell-command (jshint-make-curl-command)))
+(setq jshint-cli "jshint-curl ")
+(add-to-list 'compilation-error-regexp-alist-alist
+             '(jshint-cli "^\\(.*\\):Lint at line \\([[:digit:]]+\\) character \\([[:digit:]]+\\):" 1 2 3 ))
+(add-to-list 'compilation-error-regexp-alist 'jshint-cli)
+
 ;;;;;;;;
 ;; js2-mode
 ;; It will refuse to run unless you have byte-compiled it. 
@@ -614,15 +628,11 @@
 (add-to-list 'load-path (expand-file-name "~/repo/js2-mode.git"))
 (autoload 'js2-mode "js2-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-(setq jshint-cli "jshint ")
-(add-to-list 'compilation-error-regexp-alist-alist
-             '(jshint-cli "^\\(.*\\): line \\([[:digit:]]+\\), col \\([[:digit:]]+\\)" 1 2 3 ))
-(add-to-list 'compilation-error-regexp-alist
-             'jshint-cli)
 (add-hook 'js2-mode-hook
-     (lambda () 
+     (lambda ()
        (make-local-variable 'compile-command)
-       (setq compile-command (concat jshint-cli buffer-file-name))
+       (setq compile-command (jshint-make-curl-command))
+       (setq flymake-gui-warnings-enabled nil)
        (flymake-mode 1)))
 
 
@@ -793,4 +803,5 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(flymake-errline ((t (:underline "red"))))
+ '(flymake-warnline ((t (:underline "yellow")))))
