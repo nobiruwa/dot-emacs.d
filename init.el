@@ -597,7 +597,7 @@
 ;; JSHINTMODE="$2"
 ;; JSHINTRC="$3"
 ;; URL="$4"
-;; curl --silent --form source=\<"$FILENAME" --form filename="$FILENAME" --form mode="$JSHINTMODE" --form jshintrc="$JSHINTRC" $URL | grep '\(^Lint at \|No problems \)' | sed -e "s;^\(Lint\);$1:\1;"
+;; curl --silent --form source=\<"$FILENAME" --form filename="$FILENAME" --form mode="$JSHINTMODE" --form jshintrc="$JSHINTRC" $URL | grep '\(^Lint at \|No problems \)' | sed -e "s;^\(Lint\);$FILENAME:\1;"
 (defun quote-name (name)
   (if (string-match " " name)
       (concat "'" name "'")
