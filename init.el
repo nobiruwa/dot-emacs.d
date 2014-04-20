@@ -620,6 +620,15 @@
 (add-to-list 'compilation-error-regexp-alist 'jshint-cli)
 
 ;;;;;;;;
+;; js-mode
+;;;;;;;;
+(add-hook 'js-mode-hook
+     (lambda ()
+       (make-local-variable 'compile-command)
+       (setq compile-command (jshint-make-curl-command))
+       (setq js-indent-level 2)))
+
+;;;;;;;;
 ;; js2-mode
 ;; It will refuse to run unless you have byte-compiled it. 
 ;; You must byte-compile it with your version of Emacs because 
@@ -633,6 +642,7 @@
        (make-local-variable 'compile-command)
        (setq compile-command (jshint-make-curl-command))
        (setq flymake-gui-warnings-enabled nil)
+       (setq js2-basic-offset 2)
        (flymake-mode 1)))
 
 
