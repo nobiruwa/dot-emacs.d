@@ -169,6 +169,13 @@
                              (setq c-basic-offset 4)))
 
 ;;;;;;;;
+;; mouse, mwheel
+;;;;;;;;
+(require 'mouse)
+(require 'mwheel)
+(mouse-wheel-mode t)
+
+;;;;;;;;
 ;; org-mode
 ;;;;;;;;
 (require 'org)
