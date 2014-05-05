@@ -483,6 +483,13 @@
 (setq jedi:complete-on-dot t)
 (autoload 'jedi:setup "jedi" nil t)
 (add-hook 'python-mode-hook 'jedi:setup)
+
+;;;;;;;;
+;; flycheck-mode
+;;;;;;;;
+(setq flycheck-flake8-maximum-complexity 10)
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
 ;;;;;;;;
 ;; howm
 ;;;;;;;;
