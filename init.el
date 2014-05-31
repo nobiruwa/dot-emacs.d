@@ -51,7 +51,7 @@
                                 nil
                                 (font-lock-mode t))));
 ;; 色のテーマを定義する
-(load-theme 'tango)
+;;(load-theme 'tango)
 
 ;;;;;;;;
 ;; キーの設定
