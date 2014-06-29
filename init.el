@@ -386,7 +386,7 @@
 ;; See cedet/common/cedet.info for configuration details.
 ;; IMPORTANT: Tou must place this *before* any CEDET component (including
 ;; EIEIO) gets activated by another package (Gnus, auth-source, ...).
-(load-file (expand-file-name "~/repo/cedet.bzr/cedet-devel-load.el"))
+(load-file (expand-file-name "~/repo/cedet.git/cedet-devel-load.el"))
 ;;; ede
 (global-ede-mode 1)
 ;;; semantic
@@ -663,7 +663,9 @@
 ;;;;;;;;
 ;; my-utf-8-eaw-fullwidth.el
 ;;;;;;;;
-(load "my-utf-8-eaw-fullwidth")
+(if (eq system-type 'cygwin)
+    (load "my-utf-8-eaw-fullwidth_cygwin")
+    (load "my-utf-8-eaw-fullwidth"))
 
 ;;;;;;;;
 ;; navi2ch
@@ -805,6 +807,12 @@
 ;; grep の結果を編集し，その結果をもとにファイルを変更する．
 ;(autoload 'grep-edit "edit grep result" nil t)
 (require 'grep-edit)
+
+;;;
+;; cygwin
+;;;
+(if (eq system-type 'cygwin)
+    (progn (load "init-cygwin")))
 
 ;;;
 ;; custom-set-*

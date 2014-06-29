@@ -1,0 +1,5 @@
+auto-complete      
+jedi               
+js2-mode           
+yasnippet          
+web-mode
