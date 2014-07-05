@@ -318,46 +318,16 @@
 ;;;;;;;;;;;;; 以下、ELispファイルを追加する必要があるものを設定 ;;;;;;
 ;;;;;;;;;;;;; アルファベット順になるよう努力 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;; yasnippet
-;;読み込みはauto-cmpleteやemacs-eclimの前に行う
-;;;
-(add-to-list 'load-path
-             (expand-file-name "~/repo/yasnippet.git"))
-(require 'yasnippet)
-(setq yas/prompt-functions '(yas/ido-prompt))
-(yas/global-mode 1)
-(add-to-list 'yas-snippet-dirs
-             (expand-file-name "~/repo/nobiruwa.github/yasnippet-snippets.git"))
-(yas-load-directory (expand-file-name "~/repo/nobiruwa.github/yasnippet-snippets.git"))
-
-;; あるバッファで YASnippet マイナーモードを OFF にしたい
-;;(set-default 'yas/dont-activate
-;;             #'(lambda ()
-;;                 (and yas/root-directory
-;;                      (null (yas--get-snippet-tables)))))
-
-;; ~/.emacs.d/snippets/java-mode/getAset のための関数
-(defun downcase-initial (obj)
-  "It downcases the first letter of obj"
-  (if (and
-       (boundp 'obj)
-       (stringp obj)
-       (< 0 (length obj)))
-      (concat (downcase (substring obj 0 1)) (substring obj 1))
-    ""))
-
-
-;;;
 ;; auto-complete
 ;; URL: http://cx4a.org/software/auto-complete/
 ;;;
-;; after loading yasnippet
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/auto-complete/ac-dict")
 (ac-config-default)
 
 ;; auto-complete-modeが有効なバッファでのキーバインド
-(define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
+;;(define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
+(define-key ac-mode-map (kbd "C-c C-i") 'auto-complete)
 ;; 自動で補完しない
 (setq ac-auto-start nil)
 ;; yasnippetを情報源に追加する
@@ -430,7 +400,8 @@
 (require 'ac-emacs-eclim-source)
 (ac-emacs-eclim-config)
 ;; M-TAB での補完に eclim-complete ではなく auto-complete を用いる
-(define-key eclim-mode-map (kbd "M-TAB") 'auto-complete)
+;;(define-key eclim-mode-map (kbd "M-TAB") 'auto-complete)
+(define-key eclim-mode-map (kbd "C-c C-i") 'auto-complete)
 ;; define eclimd start function
 (defun eclim-start-eclimd (workspace)
   (interactive (list (read-directory-name "workspace: "
@@ -473,7 +444,8 @@
     (when args (set (make-local-variable 'jedi:server-args) args))
     (setq jedi:epc nil)
     (jedi:start-server)))
-(setq jedi:key-complete (kbd "<M-tab>"))
+;;(setq jedi:key-complete (kbd "<M-tab>"))
+(setq jedi:key-complete (kbd "C-c C-i"))
 (setq jedi:key-goto-definition (kbd "C-c ."))
 (setq jedi:key-show-doc (kbd "C-c d"))
 (setq jedi:key-related-names (kbd "C-c r"))
@@ -648,7 +620,7 @@
 ;; You must byte-compile it with your version of Emacs because 
 ;; different versions of Emacs have different byte-compiled formats. 
 ;;;;;;;;
-(add-to-list 'load-path (expand-file-name "~/repo/js2-mode.git"))
+;;(add-to-list 'load-path (expand-file-name "~/repo/js2-mode.git"))
 (autoload 'js2-mode "js2-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-hook 'js2-mode-hook
@@ -740,7 +712,7 @@
 ;;;;;;;;
 ;; web-mode
 ;;;;;;;;
-(add-to-list 'load-path (expand-file-name "~/repo/web-mode.git"))
+;;(add-to-list 'load-path (expand-file-name "~/repo/web-mode.git"))
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
@@ -757,9 +729,35 @@
 (turn-on-xclip)
 
 ;;;;;;;;
-;; yasnippets
+;; yasnippet
 ;;;;;;;;
-;; 依存関係から、auto-complete, emacs-eclimの前に記述する
+;;;
+;;(add-to-list 'load-path
+;;             (expand-file-name "~/repo/yasnippet.git"))
+(require 'yasnippet)
+(setq yas-prompt-functions '(yas/ido-prompt))
+(yas-global-mode 1)
+(add-to-list 'yas-snippet-dirs
+             (expand-file-name "~/repo/nobiruwa.github/yasnippet-snippets.git"))
+(yas-load-directory (expand-file-name "~/repo/nobiruwa.github/yasnippet-snippets.git"))
+
+;; あるバッファで YASnippet マイナーモードを OFF にしたい
+;;(set-default 'yas/dont-activate
+;;             #'(lambda ()
+;;                 (and yas/root-directory
+;;                      (null (yas--get-snippet-tables)))))
+
+;; ~/.emacs.d/snippets/java-mode/getAset のための関数
+(defun downcase-initial (obj)
+  "It downcases the first letter of obj"
+  (if (and
+       (boundp 'obj)
+       (stringp obj)
+       (< 0 (length obj)))
+      (concat (downcase (substring obj 0 1)) (substring obj 1))
+    ""))
+
+
 
 ;;;;;;;;;;;;;;;
 ;; MeadowMemo http://www.bookshelf.jp/soft/ の管理人が

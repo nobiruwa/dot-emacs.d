@@ -1,5 +1,7 @@
-auto-complete      
-jedi               
-js2-mode           
+auto-complete
+flycheck
+jedi
+js2-mode
+undo-tree
 yasnippet          
 web-mode
