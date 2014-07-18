@@ -654,17 +654,6 @@
 (autoload 'navi2ch "navi2ch" "Navigator for 2ch for Emacs" t)
 
 ;;;;;;;;
-;; やり直し redo.el
-;; Ref: http://www.bookshelf.jp/soft/meadow_33.html#SEC473
-;; http://www.wonderworks.com/download/redo.el
-;;;;;;;;
-(require 'redo)
-;; 空きバインドはemacs -qで起動してuim.elを切ってからM-x describe-keyで
-;; 実際にキーコードを入力して確かめる。
-(define-key global-map (kbd "<C-?>") 'redo)
-
-
-;;;;;;;;
 ;; reopen-as-root
 ;; 下記URLのEmacs Lispをファイルreopen-as-root.elに保存した
 ;; Ref: http://ubulog.blogspot.com/2010/08/emacs-sudo2.html
