@@ -50,8 +50,6 @@
                               (if font-lock-mode
                                 nil
                                 (font-lock-mode t))));
-;; 色のテーマを定義する
-;;(load-theme 'tango)
 
 ;;;;;;;;
 ;; キーの設定
@@ -348,6 +346,16 @@
 (global-auto-complete-mode t)
 
 ;;;
+;; bash-completion
+;;;
+(autoload 'bash-completion-dynamic-complete "bash-completion"
+  "BASH completion hook")
+(add-hook 'shell-dynamic-complete-functions
+          'bash-completion-dynamic-complete)
+(add-hook 'shell-command-complete-functions
+          'bash-completion-dynamic-complete)
+
+;;;
 ;; cedet, ede, semantic, etc.
 ;; Ref: Emacs Part 31
 ;; URL: http://pc12.2ch.net/test/read.cgi/unix/1251665639/312
@@ -435,7 +443,7 @@
 (require 'python-environment)
 (require 'jedi)
 (setq jedi:environment-virtualenv
-      (list "virtualenv-3.3" "--system-site-packages"))
+      (list "virtualenv" "--system-site-packages"))
 (defun jedi:start-dedicated-server2 ()
   (interactive)
   (let* ((cmds '("~/.emacs.d/.python-environments/python2.7/bin/jediepcserver"))
@@ -687,14 +695,8 @@
             (goto-char point))
         (fset 'ask-user-about-supersession-threat
               old-supersession-threat)))))
-; reopen-fileをC-x C-rにバインド
+;; reopen-fileをC-x C-rにバインド
 (define-key ctl-x-map "\C-r"  'reopen-file)
-
-;;;;;;;;
-;; shell-completion
-;; http://www.emacswiki.org/emacs/shell-completion.el
-;;;;;;;;
-(require 'shell-completion)
 
 ;;;;;;;;
 ;; skk
@@ -813,6 +815,11 @@
     (progn (load "init-cygwin")))
 
 ;;;
+;; customize theme
+;;;
+;;(load-theme 'tango-dark t)
+
+;;;
 ;; custom-set-*
 ;;;
 (custom-set-variables
@@ -824,6 +831,7 @@
  '(browse-url-mozilla-program "/usr/local/bin/firefox")
  '(browse-url-netscape-program "netscape")
  '(column-number-mode t)
+ '(frame-background-mode (quote dark))
  '(line-number-mode t)
  '(menu-bar-mode nil)
  '(show-paren-mode t))

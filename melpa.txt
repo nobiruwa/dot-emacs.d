@@ -1,7 +1,10 @@
 auto-complete
+bash-completion
 flycheck
+flycheck-pyflakes
 jedi
 js2-mode
 undo-tree
-yasnippet          
 web-mode
+xclip
+yasnippet
