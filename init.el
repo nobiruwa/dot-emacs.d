@@ -444,6 +444,12 @@
 (require 'jedi)
 (setq jedi:environment-virtualenv
       (list "virtualenv" "--system-site-packages"))
+(defun jedi:install-server2 ()
+  (interactive)
+  (let ((python-environment-virtualenv (list "virtualenv-2.7" "--system-site-packages" "--quiet" "--python" "/usr/bin/python2.7"))
+        (jedi:environment-virtualenv (list "virtualenv-2.7" "--system-site-packages" "--python" "/usr/bin/python2.7"))
+        (jedi:environment-root "python2.7"))
+    (jedi:install-server)))
 (defun jedi:start-dedicated-server2 ()
   (interactive)
   (let* ((cmds '("~/.emacs.d/.python-environments/python2.7/bin/jediepcserver"))
