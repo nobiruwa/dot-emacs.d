@@ -196,7 +196,7 @@
 ;; lsなどの色の設定
 ;; (autoload 'ansi-color-for-comint-mode-on "ansi-color"
 ;;  "Set `ansi-color-for-comint-mode' to t." t)
-(setq ansi-color-names-vector ["black" "red3" "green3" "yellow3" "navy" "magenta3" "cyan3" "white"])
+;;(setq ansi-color-names-vector ["black" "red3" "green3" "yellow3" "navy" "magenta3" "cyan3" "white"])
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 ;;;;;;;;
@@ -722,8 +722,9 @@
 ;;;;;;;;
 ;; xclip
 ;;;;;;;;
-(require 'xclip)
-(turn-on-xclip)
+(if (eq system-type 'gnu/linux)
+    (progn (require 'xclip)
+           (turn-on-xclip)))
 
 ;;;;;;;;
 ;; yasnippet
@@ -826,7 +827,6 @@
  '(browse-url-mozilla-program "/usr/local/bin/firefox")
  '(browse-url-netscape-program "netscape")
  '(column-number-mode t)
- '(frame-background-mode (quote dark))
  '(line-number-mode t)
  '(menu-bar-mode nil)
  '(show-paren-mode t))
