@@ -1,5 +1,6 @@
 auto-complete
 bash-completion
+emacs-eclim
 flycheck
 flycheck-pyflakes
 jedi

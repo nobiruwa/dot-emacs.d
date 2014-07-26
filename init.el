@@ -388,13 +388,11 @@
 
 ;;;
 ;; emacs-eclim
-;; yasnippetやauto-completeの後に読み込む
+;; auto-completeの後に読み込む
 ;;;
 ;; シンボリックリンクを開いた場合、名前を解決する
 (setq-default find-file-visit-truename t)
 
-(add-to-list 'load-path (expand-file-name "~/repo/emacs-eclim.git"))
-(add-to-list 'load-path (expand-file-name "~/repo/emacs-eclim.git/vendor"))
 (require 'eclim)
 (setq eclim-auto-save t)
 (setq eclim-executable "~/opt/eclipse/eclim")
