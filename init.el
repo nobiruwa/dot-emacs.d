@@ -196,7 +196,7 @@
 ;; lsなどの色の設定
 ;; (autoload 'ansi-color-for-comint-mode-on "ansi-color"
 ;;  "Set `ansi-color-for-comint-mode' to t." t)
-(setq ansi-color-names-vector ["black" "red3" "green3" "yellow3" "navy" "magenta3" "cyan3" "white"])
+;;(setq ansi-color-names-vector ["black" "red3" "green3" "yellow3" "navy" "magenta3" "cyan3" "white"])
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 ;;;;;;;;
@@ -442,6 +442,12 @@
 (require 'jedi)
 (setq jedi:environment-virtualenv
       (list "virtualenv" "--system-site-packages"))
+(defun jedi:install-server2 ()
+  (interactive)
+  (let ((python-environment-virtualenv (list "virtualenv-2.7" "--system-site-packages" "--quiet" "--python" "/usr/bin/python2.7"))
+        (jedi:environment-virtualenv (list "virtualenv-2.7" "--system-site-packages" "--python" "/usr/bin/python2.7"))
+        (jedi:environment-root "python2.7"))
+    (jedi:install-server)))
 (defun jedi:start-dedicated-server2 ()
   (interactive)
   (let* ((cmds '("~/.emacs.d/.python-environments/python2.7/bin/jediepcserver"))
@@ -714,8 +720,9 @@
 ;;;;;;;;
 ;; xclip
 ;;;;;;;;
-(require 'xclip)
-(turn-on-xclip)
+(if (eq system-type 'gnu/linux)
+    (progn (require 'xclip)
+           (turn-on-xclip)))
 
 ;;;;;;;;
 ;; yasnippet
@@ -818,7 +825,6 @@
  '(browse-url-mozilla-program "/usr/local/bin/firefox")
  '(browse-url-netscape-program "netscape")
  '(column-number-mode t)
- '(frame-background-mode (quote dark))
  '(line-number-mode t)
  '(menu-bar-mode nil)
  '(show-paren-mode t))
