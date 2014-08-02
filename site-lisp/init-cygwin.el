@@ -77,7 +77,20 @@
   (set-fontset-font (frame-parameter nil 'font)
                     'japanese-jisx0208
                     '("VL Gothic:spacing=22")))
+
 ;;;
 ;; my-utf-8-eaw-fullwidth_cygwin
 ;;;
 (load "my-utf-8-eaw-fullwidth_cygwin")
+
+;;;
+;; color theme
+;;;
+(load-theme 'zenburn t)
+(require 'ansi-color)
+(setq ansi-color-names-vector ["black" "red" "green" "yellow" "blue" "magenta" "cyan" "white"])
+(setq ansi-color-map (ansi-color-make-color-map))
+(set-face-attribute 'region nil :inverse-video t)
+
+(provide 'init-cygwin)
+;;; init-cygwin.el ends here

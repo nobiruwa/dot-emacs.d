@@ -9,3 +9,6 @@ undo-tree
 web-mode
 xclip
 yasnippet
+
+cygwin:
+zenburn-theme
