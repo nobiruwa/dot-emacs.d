@@ -20,55 +20,32 @@
 (setq debug-on-error nil)
 
 ;;;;;;;;
-;; 色の設定
-;;;;;;;;
-(require 'font-lock)
-(if (not (featurep 'xemacs))
-    (global-font-lock-mode t)
-)
-;; 全角スペースとかに色を付ける
-;; 色はM-x list-color-displayで確認できる
-(defface my-face-b-1 '((t (:background "#9e9e9e"))) nil) ; color-247
-(defface my-face-b-2 '((t (:background "#d480d4"))) nil) ; color-219
-(defface my-face-u-1 '((t (:foreground "#8055aa" :underline t))) nil) ; color-140
-(defvar my-face-b-1 'my-face-b-1)
-(defvar my-face-b-2 'my-face-b-2)
-(defvar my-face-u-1 'my-face-u-1)
-;;just in timeな色付け
-(setq font-lock-support-mode 'jit-lock-mode)
-(defadvice font-lock-mode (before my-font-lock-mode ())
-             (font-lock-add-keywords
-                  major-mode
-                     '(
-                            ("　" 0 my-face-b-1 append)
-                            ("\t" 0 my-face-b-2 append)
-                            ("[ ]+$" 0 my-face-u-1 append)
-           )))
-(ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
-(ad-activate 'font-lock-mode)
-(add-hook 'find-file-hooks '(lambda ()
-                              (if font-lock-mode
-                                nil
-                                (font-lock-mode t))));
-
-;;;;;;;;
 ;; キーの設定
 ;;;;;;;;
 ;; C-zを無効にする
 (global-set-key "\C-z" nil)
 ;; C-h キーでカーソルの左の文字が消えるようにする。
 (global-set-key "\C-h" 'backward-delete-char)
-;;copy & paste from Emacs to X application 
-(setq x-select-enable-clipboard t)
-;;クリップボードにコピー
-(global-set-key "\M-w" 'clipboard-kill-ring-save)
-;;切り取ってクリップボードへ
-(global-set-key "\C-w" 'clipboard-kill-region)
-;;クリップボードからyank
-(global-set-key "\C-y" 'clipboard-yank)
 ;; Ref: http://q.hatena.ne.jp/1137478760 の回答20
-;;ミニバッファ内でC-wで単語削除です。上位パスのファイルを選択する際に便利です。
+;; ミニバッファ内でC-wで単語削除です。上位パスのファイルを選択する際に便利です。
 (define-key minibuffer-local-completion-map "\C-w" 'backward-kill-word)
+;; xclip.elの代替
+;; C-w, M-wでX Window Systemのclipboardセレクションにコピーする
+;; coding-system-for-writeでUTF-8でのコピーを強制する
+;; Ref: http://garin.jp/doc/unix/xwindow_clipboard
+(defun my-cut-function (text &optional rest)
+  (interactive)
+  (let ((process-connection-type nil)
+        (coding-system-for-write 'utf-8))
+    (let ((proc (start-process "xclip" "*Messages*" "xclip" "-selection" "clipboard")))
+      (process-send-string proc text)
+      (process-send-eof proc))))
+;; pasteをセットすると、yank時に同内容のテキストが2つずつ入っているように見える
+;; pasteはShift-Insertで行えばよいのでnilとする
+(when (and (not window-system) (not (eq system-type 'cygwin))
+         (executable-find "xclip"))
+  (setq interprogram-cut-function 'my-cut-function)
+  (setq interprogram-paste-function nil))
 
 ;;;;;;;;
 ;; タブと空白の設定
@@ -141,19 +118,6 @@
 (setq ediff-split-window-function (if (> (frame-width) 150)
                                       'split-window-horizontally
                                     'split-window-vertically))
-;;;;
-;; iimageマイナーモード
-;;  M-x iimage-mode RET でオン、オフのトグル動作です。
-;; メジャーモードの foo-mode-hook でオンにするのが良いでしょう。
-;; バッファ中に[[filename.png]]や `filename.jpg'のような画像ファイル名が存在し、
-;; カレントディレクトリからの相対パ スで該当する画像ファイルが存在すれば該当画
-;; 像をインライン表 示します。
-;; 画像ファイル名を入力しても即時画像表示はされずに、C-l によっ て再描画します。
-;; Ref:  http://www.netlaputa.ne.jp/~kose/Emacs/200402.html
-;(autoload 'iimage-mode "iimage" "Support Inline image minor mode." t)
-;(autoload 'turn-on-iimage-mode "iimage" "Turn on Inline image minor mode." t)
-;ディレクトリを省略したときの画像の検索パス
-(setq iimage-mode-image-search-path '("~/mathimg/thumb"))
 ;;;;;;;;
 ;; iswitchb-mode
 ;;;;;;;;
@@ -718,13 +682,6 @@
 (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 ;;;;;;;;
-;; xclip
-;;;;;;;;
-(if (eq system-type 'gnu/linux)
-    (progn (require 'xclip)
-           (turn-on-xclip)))
-
-;;;;;;;;
 ;; yasnippet
 ;;;;;;;;
 ;;;
@@ -803,15 +760,49 @@
 (require 'grep-edit)
 
 ;;;
+;; customize theme, color
+;;;
+;;(load-theme 'tango-dark t)
+;;;;;;;;
+;; 色の設定
+;;;;;;;;
+(require 'font-lock)
+(if (not (featurep 'xemacs)) (global-font-lock-mode t))
+;; 全角スペースとかに色を付ける
+;; 色はM-x list-color-displayで確認できる
+(defface my-face-b-1 '((t (:background "#9e9e9e"))) nil) ; color-247
+(defface my-face-b-2 '((t (:background "#d480d4"))) nil) ; color-219
+(defface my-face-u-1 '((t (:foreground "#8055aa" :underline t))) nil) ; color-140
+(defvar my-face-b-1 'my-face-b-1)
+(defvar my-face-b-2 'my-face-b-2)
+(defvar my-face-u-1 'my-face-u-1)
+;;just in timeな色付け
+(setq font-lock-support-mode 'jit-lock-mode)
+(defadvice font-lock-mode (before my-font-lock-mode ())
+  (font-lock-add-keywords major-mode
+                          '(("　" 0 my-face-b-1 append)
+                            ("\t" 0 my-face-b-2 append)
+                            ("[ ]+$" 0 my-face-u-1 append))))
+(ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
+(ad-activate 'font-lock-mode)
+(add-hook 'find-file-hooks
+          '(lambda () (if font-lock-mode nil (font-lock-mode t))))
+
+(if (not (eq system-type 'cygwin))
+    (progn (show-paren-mode t)
+           (set-face-attribute 'show-paren-match nil
+                               :foreground "brightyellow"
+                               :weight 'bold)
+           (set-face-attribute 'font-lock-comment-delimiter-face nil
+                               :foreground "green")
+           (set-face-attribute 'font-lock-comment-face nil
+                               :foreground "green")))
+
+;;;
 ;; cygwin
 ;;;
 (if (eq system-type 'cygwin)
     (progn (load "init-cygwin")))
-
-;;;
-;; customize theme
-;;;
-;;(load-theme 'tango-dark t)
 
 ;;;
 ;; custom-set-*

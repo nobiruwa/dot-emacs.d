@@ -7,7 +7,6 @@ jedi
 js2-mode
 undo-tree
 web-mode
-xclip
 yasnippet
 
 cygwin:
