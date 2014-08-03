@@ -789,7 +789,7 @@
           '(lambda () (if font-lock-mode nil (font-lock-mode t))))
 
 (if (not (eq system-type 'cygwin))
-    (progn (show-paren-mode t)
+    (progn (show-paren-mode 1)
            (set-face-attribute 'show-paren-match nil
                                :foreground "brightyellow"
                                :weight 'bold)
@@ -827,3 +827,6 @@
  ;; If there is more than one, they won't work right.
  '(flymake-errline ((t (:underline "red"))))
  '(flymake-warnline ((t (:underline "yellow")))))
+
+(provide 'init)
+;;; init.el ends here
