@@ -135,6 +135,8 @@
 ;;;;;;;;
 (require 'mouse)
 (require 'mwheel)
+(if (eq system-type 'gnu/linux)
+    (xterm-mouse-mode 1))
 (mouse-wheel-mode t)
 
 ;;;;;;;;
