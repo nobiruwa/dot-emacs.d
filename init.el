@@ -1,3 +1,7 @@
+;;; init.el --- my Emacs settings
+;;; Commentary:
+;;;  My Emacs settings.
+;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; グローバルな設定
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -30,10 +34,10 @@
 ;; ミニバッファ内でC-wで単語削除です。上位パスのファイルを選択する際に便利です。
 (define-key minibuffer-local-completion-map "\C-w" 'backward-kill-word)
 ;; xclip.elの代替
-;; C-w, M-wでX Window Systemのclipboardセレクションにコピーする
-;; coding-system-for-writeでUTF-8でのコピーを強制する
 ;; Ref: http://garin.jp/doc/unix/xwindow_clipboard
-(defun my-cut-function (text &optional rest)
+(defun my-cut-function (text)
+  "Copy TEXT to clipboard selection of X Window System.
+TEXT should be UTF-8"
   (interactive)
   (let ((process-connection-type nil)
         (coding-system-for-write 'utf-8))
@@ -75,31 +79,21 @@
 (set-language-environment "English")
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
-(setq default-buffer-file-coding-system 'utf-8)
-
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-buffer-file-coding-system 'utf-8-unix)
 (setq locale-coding-system 'utf-8)
 (setq file-name-coding-system 'utf-8)
 ;;(set-clipboard-coding-system 'utf-8)これを設定するとUTF-8の文字をペーストしたときに文字化けする
-;;utf-8のambiguous charactersの文字幅
-;;utf-translate-cjk modeを使用しているときに有効
-(setq utf-translate-cjk-set-unicode-range 1)
 
 ;;;;;;;;;;;;;; Emacs 標準Lisp ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;
-;; C mode (c-mode)
+;; all CC Mode modes
 ;;;;;;;;
-;; /usr/src/linux/Documentation/CodingStyle ;Read it.
-(defun my-c-mode-common-hook ()
+(add-hook 'c-mode-common-hook (lambda ()
    (c-set-style "bsd")
-   (setq indent-tabs-mode nil) ;linux
    (setq c-basic-offset 4)
-   ;(c-set-style "k&r") ;k&r
-   ;(c-set-style "gnu") ;default
-)
-(add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
+   (setq indent-tabs-mode nil)))
 
 ;;;;;;;;
 ;; C++ mode (c++-mode)
@@ -331,27 +325,11 @@
 ;; IMPORTANT: Tou must place this *before* any CEDET component (including
 ;; EIEIO) gets activated by another package (Gnus, auth-source, ...).
 (load-file (expand-file-name "~/repo/cedet.git/cedet-devel-load.el"))
-;;; ede
-(global-ede-mode 1)
-;;; semantic
-;; * This enables even more coding tools such as intellisense mode,
-;;   decoration mode, and stickyfunc mode (plus regular code helpers)
-(semantic-load-enable-code-helpers)
 ;; DBファイルを一ヶ所に集約
 (setq semanticdb-default-save-directory "~/.emacs.d/semantic")
-;; 補完のキーバインド
-;; auto-completeのソース
-(defun my-cedet-hook ()
-  (local-set-key [(control return)] 'semantic-ia-complete-symbol)
-  (local-set-key "\C-c?" 'semantic-ia-complete-symbol-menu)
-  (local-set-key "\C-c>" 'semantic-complete-analyze-inline)
-  (local-set-key "\C-cp" 'semantic-analyze-proto-impl-toggle)
-  (add-to-list 'ac-sources 'ac-source-semantic)
-  )
-;; C/C++ モードへのフック
-(add-hook 'c-mode-common-hook 'my-cedet-hook)
-(add-hook 'c++-mode-hook 'my-cedet-hook)
-
+;; disable semantic-mode and global-*-mode in CEDET
+;; CEDET conflicts js2-mode, python-mode
+(semantic-mode -1)
 ;;;
 ;; emacs-eclim
 ;; auto-completeの後に読み込む
