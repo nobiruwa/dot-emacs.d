@@ -112,10 +112,11 @@ TEXT should be UTF-8"
 (setq ediff-split-window-function (if (> (frame-width) 150)
                                       'split-window-horizontally
                                     'split-window-vertically))
+
 ;;;;;;;;
-;; iswitchb-mode
+;; ido-mode
 ;;;;;;;;
-(iswitchb-mode 1)
+(ido-mode 1)
 
 ;;;;;;;;
 ;; java-mode
@@ -308,12 +309,12 @@ TEXT should be UTF-8"
 ;;;
 ;; bash-completion
 ;;;
-(autoload 'bash-completion-dynamic-complete "bash-completion"
-  "BASH completion hook")
-(add-hook 'shell-dynamic-complete-functions
-          'bash-completion-dynamic-complete)
-(add-hook 'shell-command-complete-functions
-          'bash-completion-dynamic-complete)
+;; (autoload 'bash-completion-dynamic-complete "bash-completion"
+;;   "BASH completion hook")
+;; (add-hook 'shell-dynamic-complete-functions
+;;           'bash-completion-dynamic-complete)
+;; (add-hook 'shell-command-complete-functions
+;;           'bash-completion-dynamic-complete)
 
 ;;;
 ;; cedet, ede, semantic, etc.
