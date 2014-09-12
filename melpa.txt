@@ -1,13 +1,19 @@
 auto-complete
 bash-completion
 emacs-eclim
+emmet-mode
+f
 flycheck
 flycheck-pyflakes
 jedi
 js2-mode
+s
 undo-tree
 web-mode
 yasnippet
+
+linux:
+xclip
 
 cygwin:
 zenburn-theme

@@ -414,6 +414,34 @@ TEXT should be UTF-8"
 (add-hook 'python-mode-hook 'jedi:setup)
 
 ;;;;;;;;
+;;  emmet-mode
+;;;;;;;;
+(defun emmet-preview-accept ()
+  "Original emmet-preview-accept does not work.
+Temporarily, bind expr to the return value of emmet-expr-on-line."
+  (interactive)
+  (let ((ovli emmet-preview-input))
+    (if (not (and (overlayp ovli)
+                  (bufferp (overlay-buffer ovli))))
+        (message "Preview is not active")
+      (let* ((indent (current-indentation))
+             (markup (emmet-preview-transformed indent))
+             (expr (emmet-expr-on-line)))
+        (when markup
+          (delete-region (overlay-start ovli) (overlay-end ovli))
+          (emmet-insert-and-flash markup)
+          (emmet-reposition-cursor expr)))))
+  (emmet-preview-abort))
+
+(add-hook 'html-mode-hook 'emmet-mode)
+(add-hook 'web-mode-hook 'emmet-mode)
+(add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+(add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
+(add-hook 'emmet-mode-hook (lambda ()
+                             (setq emmet-insert-flash-time 0.08)
+                             (define-key emmet-mode-keymap (kbd "C-j") nil)))
+
+;;;;;;;;
 ;; flycheck-mode
 ;;;;;;;;
 (setq flycheck-flake8-maximum-complexity 10)
@@ -662,6 +690,9 @@ TEXT should be UTF-8"
 (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-hook 'web-mode-hook (lambda ()
+                           (setq web-mode-tag-auto-close-style 1)))
+
 ;;;;;;;;
 ;; yasnippet
 ;;;;;;;;
