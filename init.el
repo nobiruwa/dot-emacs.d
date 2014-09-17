@@ -416,29 +416,34 @@ TEXT should be UTF-8"
 ;;;;;;;;
 ;;  emmet-mode
 ;;;;;;;;
-(defun emmet-preview-accept ()
-  "Original emmet-preview-accept does not work.
+(eval-after-load "emmet-mode"
+  '(progn
+     (message "[emmet] redefine emmet-preview-accpet")
+     (defun emmet-preview-accept
+       ()
+       "Original emmet-preview-accept does not work.
 Temporarily, bind expr to the return value of emmet-expr-on-line."
-  (interactive)
-  (let ((ovli emmet-preview-input))
-    (if (not (and (overlayp ovli)
-                  (bufferp (overlay-buffer ovli))))
-        (message "Preview is not active")
-      (let* ((indent (current-indentation))
-             (markup (emmet-preview-transformed indent))
-             (expr (emmet-expr-on-line)))
-        (when markup
-          (delete-region (overlay-start ovli) (overlay-end ovli))
-          (emmet-insert-and-flash markup)
-          (emmet-reposition-cursor expr)))))
-  (emmet-preview-abort))
+       (interactive)
+       (let ((ovli emmet-preview-input))
+         (if (not (and (overlayp ovli)
+                       (bufferp (overlay-buffer ovli))))
+             (message "Preview is not active")
+           (let* ((indent (current-indentation))
+                  (markup (emmet-preview-transformed indent))
+                  (expr (emmet-expr-on-line)))
+             (when markup
+               (delete-region (overlay-start ovli) (overlay-end ovli))
+               (emmet-insert-and-flash markup)
+               (emmet-reposition-cursor expr)))))
+       (emmet-preview-abort))
+     ))
 
 (add-hook 'html-mode-hook 'emmet-mode)
 (add-hook 'web-mode-hook 'emmet-mode)
 (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
 (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
 (add-hook 'emmet-mode-hook (lambda ()
-                             (setq emmet-insert-flash-time 0.08)
+                             (setq emmet-insert-flash-time 0.001)
                              (define-key emmet-mode-keymap (kbd "C-j") nil)))
 
 ;;;;;;;;
