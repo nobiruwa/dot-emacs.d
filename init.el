@@ -84,6 +84,7 @@ TEXT should be UTF-8"
 (set-buffer-file-coding-system 'utf-8-unix)
 (setq locale-coding-system 'utf-8)
 (setq file-name-coding-system 'utf-8)
+(setq default-process-coding-system '(utf-8-unix . utf-8-unix))
 ;;(set-clipboard-coding-system 'utf-8)これを設定するとUTF-8の文字をペーストしたときに文字化けする
 
 ;;;;;;;;;;;;;; Emacs 標準Lisp ;;;;;;;;;;;;;;;;;;;;;;;;;;;
