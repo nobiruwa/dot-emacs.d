@@ -85,7 +85,10 @@ TEXT should be UTF-8"
 (setq locale-coding-system 'utf-8)
 (setq file-name-coding-system 'utf-8)
 (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
-;;(set-clipboard-coding-system 'utf-8)これを設定するとUTF-8の文字をペーストしたときに文字化けする
+;; my-utf-8-eaw-fullwidth.el
+(if (eq system-type 'cygwin)
+    (load "my-utf-8-eaw-fullwidth_cygwin")
+    (load "my-utf-8-eaw-fullwidth"))
 
 ;;;;;;;;;;;;;; Emacs 標準Lisp ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;
@@ -621,14 +624,6 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
        (setq flymake-gui-warnings-enabled nil)
        (setq js2-basic-offset 2)
        (flymake-mode 1)))
-
-
-;;;;;;;;
-;; my-utf-8-eaw-fullwidth.el
-;;;;;;;;
-(if (eq system-type 'cygwin)
-    (load "my-utf-8-eaw-fullwidth_cygwin")
-    (load "my-utf-8-eaw-fullwidth"))
 
 ;;;;;;;;
 ;; navi2ch
