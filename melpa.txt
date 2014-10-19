@@ -1,5 +1,6 @@
 auto-complete
 bash-completion
+dash
 emacs-eclim
 emmet-mode
 f
@@ -7,6 +8,7 @@ flycheck
 flycheck-pyflakes
 jedi
 js2-mode
+markdown-mode
 s
 undo-tree
 web-mode
