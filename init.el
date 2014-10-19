@@ -740,7 +740,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
         "newsrc.eld"
         " *migemo*" ".bbdb"))
 (setq dmoccur-exclusion-mask
-      (append '("/\\.git/.+") (remove "\\.git/.+" dmoccur-exclusion-mask)))
+      (append (remove "\\.git/.+" dmoccur-exclusion-mask) '("/\\.git/.+")))
 (setq dmoccur-exclusion-mask )
 (define-key Buffer-menu-mode-map "O" 'Buffer-menu-moccur)
 (setq dmoccur-use-list t)
