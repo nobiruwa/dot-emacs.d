@@ -457,6 +457,15 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;;;;;;;;
+;; hilight-indentation
+;;;;;;;;
+(require 'highlight-indentation)
+(add-hook 'python-mode-hook
+          (lambda ()
+            "turn on highlight-indentation-mode"
+            (highlight-indentation-mode 1)))
+
+;;;;;;;;
 ;; howm
 ;;;;;;;;
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/howm/site-lisp"))
@@ -647,6 +656,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;   - find-alternate-file は開き直したら元のバッファの状態に戻れない
 ;;
 (defun reopen-file ()
+  "Reopen file without confirm yes/no."
   (interactive)
   (let ((file-name (buffer-file-name))
         (old-supersession-threat
@@ -715,7 +725,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 
 ;; ~/.emacs.d/snippets/java-mode/getAset のための関数
 (defun downcase-initial (obj)
-  "It downcases the first letter of obj"
+  "It downcases the first letter of OBJ."
   (if (and
        (boundp 'obj)
        (stringp obj)
@@ -828,8 +838,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(browse-url-browser-function (quote browse-url-mozilla))
- '(browse-url-mozilla-program "/usr/local/bin/firefox")
+ '(browse-url-browser-function (quote browse-url-firefox))
  '(browse-url-netscape-program "netscape")
  '(column-number-mode t)
  '(line-number-mode t)
