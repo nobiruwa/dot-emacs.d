@@ -109,6 +109,7 @@ TEXT should be UTF-8"
 ;;;;;;;;
 ;; ediff
 ;;;;;;;;
+(require 'ediff)
 ;; This is what you probably want if you are using a tiling window
 ;; manager under X, such as ratpoison.
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
@@ -120,7 +121,9 @@ TEXT should be UTF-8"
 ;;;;;;;;
 ;; ido-mode
 ;;;;;;;;
+(require 'ido)
 (ido-mode 1)
+(setq ido-auto-merge-work-directories-length -1)
 
 ;;;;;;;;
 ;; java-mode
@@ -165,66 +168,6 @@ TEXT should be UTF-8"
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 ;;;;;;;;
-;; sql-mode
-;; http://www.emncswiki.org/cgi-bin/wiki.pl?SqlMode
-;;;;;;;;
-;; SQL mode に入った時点で sql-indent / sql-complete を読み込む
-;; (eval-after-load "sql"
-;;   '(progn
-;;      (load-library "sql-indent")
-;;      (load-library "sql-complete")
-;;      (load-library "sql-transform")
-;;      ))
-
-;; デフォルトのデータベースの設定
-(setq sql-user "mysql")
-(setq sql-database "hellodb")
-;; SQL モードの雑多な設定
-(add-hook 'sql-mode-hook
-    (function (lambda ()
-                (setq sql-indent-offset 4)
-                (setq sql-indent-maybe-tab t)
-                (local-set-key "\C-cu" 'sql-to-update) ; sql-transform 
-                 ;; SQLi の自動ポップアップ
-                   (setq sql-pop-to-buffer-after-send-region t)
-                ;; master モードを有効にし、SQLi をスレーブバッファにする
-                   (master-mode t)
-                (master-set-slave sql-buffer)
-                ))
-    )
-(add-hook 'sql-set-sqli-hook
-          (function (lambda ()
-                      (master-set-slave sql-buffer)))) 
-(add-hook 'sql-interactive-mode-hook
-          (function (lambda ()
-                      ;; 「;」をタイプしたら SQL 文を実行
-                         (setq sql-electric-stuff 'semicolon) 
-                      ;; comint 関係の設定
-                         (setq comint-buffer-maximum-size 500)
-                      (setq comint-input-autoexpand t)
-                      (setq comint-output-filter-functions 
-                            'comint-truncate-buffer)))
-          )
-
-;; SQL モードから SQLi へ送った SQL 文も SQLi ヒストリの対象とする
-(defadvice sql-send-region (after sql-store-in-history)
-  "The region sent to the SQLi process is also stored in the history."
-  (let ((history (buffer-substring-no-properties start end)))
-    (save-excursion
-      (set-buffer sql-buffer)
-      (message history)
-      (if (and (funcall comint-input-filter history)
-               (or (null comint-input-ignoredups)
-                   (not (ring-p comint-input-ring))
-                   (ring-empty-p comint-input-ring)
-                   (not (string-equal (ring-ref comint-input-ring 0)
-                                      history))))
-          (ring-insert comint-input-ring history))
-      (setq comint-save-input-ring-index comint-input-ring-index)
-      (setq comint-input-ring-index nil))))
-(ad-activate 'sql-send-region)
-
-;;;;;;;;
 ;; uniquify
 ;; Ref: http://q.hatena.ne.jp/1137478760 の回答24
 ;; a/index.html と b/index.html をひらいたときに、
@@ -251,13 +194,13 @@ TEXT should be UTF-8"
 ;; into the buffer.
 ;;;;;;;;;;;;
 (defun my-insert-file-name (arg filename)
-  "Insert name of file FILENAME into buffer after point.
-  Set mark after the inserted text.
+  "If ARG is non nil, insert name of file FILENAME into buffer after point.
+Set mark after the inserted text.
 
-  Prefixed with \\[universal-argument], expand the file name to
-  its fully canocalized path.
+Prefixed with \\[universal-argument], expand the file name to
+its fully canocalized path.
 
-  See `expand-file-name'."
+See `expand-file-name'."
   ;; Based on insert-file in Emacs -- ashawley 2008-09-26
   (interactive "*P\nfInsert file name: ")
   (if arg
