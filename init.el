@@ -629,6 +629,15 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (setq skk-undo-kakutei-word-only t)
 
 ;;;;;;;;
+;; undo-tree
+;;;;;;;;
+(require 'undo-tree)
+(global-undo-tree-mode)
+;; rxvt-unicode detects C-c C-/ as C-c C-_
+(define-key undo-tree-map (kbd "C-c C-/") 'undo-tree-redo)
+(define-key undo-tree-map (kbd "C-c C-_") 'undo-tree-redo)
+
+;;;;;;;;
 ;; wdired
 ;;;;;;;;;
 (require 'wdired)
