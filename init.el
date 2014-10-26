@@ -389,9 +389,12 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (add-hook 'web-mode-hook 'emmet-mode)
 (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
 (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
-(add-hook 'emmet-mode-hook (lambda ()
-                             (setq emmet-insert-flash-time 0.001)
-                             (define-key emmet-mode-keymap (kbd "C-j") nil)))
+(add-hook 'emmet-mode-hook
+          (lambda ()
+            (setq emmet-insert-flash-time 0.001)
+            (define-key emmet-mode-keymap (kbd "C-j") nil)
+            (define-key emmet-mode-keymap (kbd "<C-return>") nil)
+            (define-key emmet-mode-keymap (kbd "C-c C-v") 'emmet-expand-line)))
 
 ;;;;;;;;
 ;; flycheck-mode
