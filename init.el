@@ -278,6 +278,7 @@ See `expand-file-name'."
 ;; disable semantic-mode and global-*-mode in CEDET
 ;; CEDET conflicts js2-mode, python-mode
 (semantic-mode -1)
+
 ;;;
 ;; emacs-eclim
 ;; auto-completeの後に読み込む
@@ -585,6 +586,12 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 (add-to-list 'load-path (expand-file-name "~/repo/navi2ch.git"))
 (autoload 'navi2ch "navi2ch" "Navigator for 2ch for Emacs" t)
+
+;;;;;;;;
+;; omnisharp-mode
+;;;;;;;;
+(setq omnisharp-server-executable-path (expand-file-name "~/repo/omnisharp-server.git/OmniSharp/bin/Debug/OmniSharp.exe"))
+(add-hook 'csharp-mode-hook 'omnisharp-mode)
 
 ;;;;;;;;
 ;; reopen-as-root
