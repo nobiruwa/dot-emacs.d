@@ -333,8 +333,11 @@ See `expand-file-name'."
 ;;(add-to-list 'load-path "~/repo/emacs-jedi.git")
 (require 'python-environment)
 (require 'jedi)
+
 (setq jedi:environment-virtualenv
-      (list "virtualenv" "--system-site-packages"))
+      (append python-environment-virtualenv
+              '("--python" "/usr/bin/python3")))
+
 (defun jedi:install-server2 ()
   (interactive)
   (let ((python-environment-virtualenv (list "virtualenv" "--system-site-packages" "--quiet" "--python" "/usr/bin/python2.7"))
@@ -590,8 +593,10 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; omnisharp-mode
 ;;;;;;;;
-(setq omnisharp-server-executable-path (expand-file-name "~/repo/omnisharp-server.git/OmniSharp/bin/Debug/OmniSharp.exe"))
-(add-hook 'csharp-mode-hook 'omnisharp-mode)
+(when (require 'omnisharp nil 'noerror)
+  (progn
+   (setq omnisharp-server-executable-path (expand-file-name "~/repo/omnisharp-server.git/OmniSharp/bin/Debug/OmniSharp.exe"))
+   (add-hook 'csharp-mode-hook 'omnisharp-mode)))
 
 ;;;;;;;;
 ;; reopen-as-root
