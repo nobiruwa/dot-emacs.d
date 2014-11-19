@@ -404,7 +404,8 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; flycheck-mode
 ;;;;;;;;
 (setq flycheck-flake8-maximum-complexity 10)
-(add-hook 'after-init-hook #'global-flycheck-mode)
+(global-set-key (kbd "<f8>") 'flycheck-mode)
+;;(add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;;;;;;;;
 ;; hilight-indentation
