@@ -526,46 +526,11 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (add-hook 'java-mode-hook '(lambda ()
                              (java-mode-indent-annotations-setup)))
 
-;;;;;;;
-;; jshint-mode
-;;;;;;;
-(add-to-list 'load-path (expand-file-name "~/repo/jshint-mode.git"))
-(require 'flymake-jshint)
-;; 下記の内容のjshint-curlと組み合わせて使う
-;; #!/bin/sh
-;; FILENAME="$1"
-;; JSHINTMODE="$2"
-;; JSHINTRC="$3"
-;; URL="$4"
-;; curl --silent --form source=\<"$FILENAME" --form filename="$FILENAME" --form mode="$JSHINTMODE" --form jshintrc="$JSHINTRC" $URL | grep '\(^Lint at \|No problems \)' | sed -e "s;^\(Lint\);$FILENAME:\1;"
-(defun quote-name (name)
-  (if (string-match " " name)
-      (concat "'" name "'")
-    name))
-(defun jshint-make-curl-command ()
-  (let* ((local-file (quote-name buffer-file-name))
-         (jshint-url (format "http://%s:%d/check" jshint-mode-host jshint-mode-port))
-         (jshintrc
-          (quote-name
-           (if (string= "" jshint-mode-jshintrc)
-               (expand-file-name ".jshintrc" (locate-dominating-file default-directory ".jshintrc"))
-             jshint-mode-jshintrc))))
-     (mapconcat 'identity (list "jshint-curl" local-file jshint-mode-mode jshintrc jshint-url) " ")))
-(defun jshint-curl ()
-  (interactive)
-  (shell-command (jshint-make-curl-command)))
-(setq jshint-cli "jshint-curl ")
-(add-to-list 'compilation-error-regexp-alist-alist
-             '(jshint-cli "^\\(.*\\):Lint at line \\([[:digit:]]+\\) character \\([[:digit:]]+\\):" 1 2 3 ))
-(add-to-list 'compilation-error-regexp-alist 'jshint-cli)
-
 ;;;;;;;;
 ;; js-mode
 ;;;;;;;;
 (add-hook 'js-mode-hook
      (lambda ()
-       (make-local-variable 'compile-command)
-       (setq compile-command (jshint-make-curl-command))
        (setq js-indent-level 2)))
 
 ;;;;;;;;
@@ -579,11 +544,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-hook 'js2-mode-hook
      (lambda ()
-       (make-local-variable 'compile-command)
-       (setq compile-command (jshint-make-curl-command))
-       (setq flymake-gui-warnings-enabled nil)
-       (setq js2-basic-offset 2)
-       (flymake-mode 1)))
+       (setq js2-basic-offset 2)))
 
 ;;;;;;;;
 ;; navi2ch
