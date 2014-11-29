@@ -142,6 +142,12 @@ TEXT should be UTF-8"
 (mouse-wheel-mode t)
 
 ;;;;;;;;
+;; nxml-mode
+;;;;;;;;
+(require 'xml)
+(setq nxml-slash-auto-complete-flag t)
+
+;;;;;;;;
 ;; org-mode
 ;;;;;;;;
 (require 'org)
