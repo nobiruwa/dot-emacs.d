@@ -604,6 +604,18 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; skk
 ;;;;;;;;
+;; skk-modeが有効になると、C-jがskk-kakutei-keyにバインドされる
+;; 使用頻度の殆どないC-oにnewlineをバインドする
+(add-hook 'skk-load-hook
+          '(lambda ()
+             (progn
+               (if (functionp 'electric-newline-and-maybe-indent)
+                   (progn
+                     (define-key skk-abbrev-mode-map "\C-o" 'electric-newline-and-maybe-indent)
+                     (define-key skk-latin-mode-map "\C-o" 'electric-newline-and-maybe-indent)
+                     (define-key skk-jisx0208-latin-mode-map "\C-o" 'electric-newline-and-maybe-indent)
+                     (define-key skk-j-mode-map "\C-o" 'electric-newline-and-maybe-indent))))))
+
 (setq skk-aux-large-jisyo nil)
 ;; ▽モードと▼モード時のアンドゥ情報を記録しない
 (setq skk-undo-kakutei-word-only t)
