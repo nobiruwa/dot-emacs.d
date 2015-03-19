@@ -557,7 +557,13 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 (add-to-list 'load-path (expand-file-name "~/repo/navi2ch.git"))
 (autoload 'navi2ch "navi2ch" "Navigator for 2ch for Emacs" t)
-
+;; オープン2chを見る C-u s で強制更新
+(setq navi2ch-list-bbstable-url
+      "http://menu.open2ch.net/bbsmenu.html")
+(setq navi2ch-list-valid-host-regexp
+      (concat "\\("
+              (regexp-opt '(".machibbs.com" ".machi.to" ".open2ch.net"))
+              "\\)\\'"))
 ;;;;;;;;
 ;; omnisharp-mode
 ;;;;;;;;
