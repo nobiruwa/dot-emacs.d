@@ -414,7 +414,19 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;(add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;;;;;;;;
-;; hilight-indentation
+;; haskell-mode
+;;;;;;;;
+;; See https://github.com/syl20bnr/spacemacs/issues/706
+;; and https://github.com/haskell/haskell-mode/wiki/Indentation
+;; haskell-indentation-mode is the current implementataion,
+;; but it's too buggy.
+(add-hook 'haskell-mode-hook
+          (lambda ()
+            (haskell-indent-mode)
+            (setq haskell-indent-offset 2)))
+
+;;;;;;;;
+;; highlight-indentation
 ;;;;;;;;
 (require 'highlight-indentation)
 (add-hook 'python-mode-hook
