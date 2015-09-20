@@ -35,20 +35,32 @@
 (define-key minibuffer-local-completion-map "\C-w" 'backward-kill-word)
 ;; xclip.elの代替
 ;; Ref: http://garin.jp/doc/unix/xwindow_clipboard
-(defun my-cut-function (text)
+(defun my-xclip-cut-function (text)
   "Copy TEXT to clipboard selection of X Window System.
-TEXT should be UTF-8"
+TEXT should be UTF-8.
+This requires xclip command."
   (interactive)
   (let ((process-connection-type nil)
         (coding-system-for-write 'utf-8))
     (let ((proc (start-process "xclip" "*Messages*" "xclip" "-selection" "clipboard")))
       (process-send-string proc text)
       (process-send-eof proc))))
+
+(defun my-xclip-paste-function ()
+  "Paste the text from the X clipboard to the current buffer.
+This requires xclip command."
+  (interactive)
+  (let ((process-connection-type nil)
+        (coding-system-for-write 'utf-8))
+    (let ((xclip-output (shell-command-to-string "xclip -o -selection clipboard")))
+      (unless (string= (car kill-ring) xclip-output)
+        (insert xclip-output)))))
+
 ;; pasteをセットすると、yank時に同内容のテキストが2つずつ入っているように見える
 ;; pasteはShift-Insertで行えばよいのでnilとする
 (when (and (not window-system) (not (eq system-type 'cygwin))
          (executable-find "xclip"))
-  (setq interprogram-cut-function 'my-cut-function)
+  (setq interprogram-cut-function 'my-xclip-cut-function)
   (setq interprogram-paste-function nil))
 
 ;;;;;;;;
