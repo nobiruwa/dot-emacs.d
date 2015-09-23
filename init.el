@@ -680,6 +680,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-hook 'web-mode-hook (lambda ()
                            (progn
+                             (auto-fill-mode -1)
                              (setq web-mode-markup-indent-offset 2)
                              (setq web-mode-css-indent-offset 2)
                              (setq web-mode-code-indent-offset 2)
