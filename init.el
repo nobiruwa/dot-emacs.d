@@ -136,6 +136,11 @@ This requires xclip command."
 (require 'ido)
 (ido-mode 1)
 (setq ido-auto-merge-work-directories-length -1)
+;; See: http://www.gnu.org/software/emacs/manual/html_mono/ido.html#Ignoring
+;; foo.gitという名前でリポジトリをcloneするポリシーのため、hidden extensionsから削除する。
+;; .gitという隠しディレクトリも見えるようになるが、挙動として問題ない。
+;; ちなみに、ido-find-fileに隠されたアイテムを表示するにはC-a (ido-toggle-ignore) を使う。
+(setq completion-ignored-extensions (delete ".git/" completion-ignored-extensions))
 
 ;;;;;;;;
 ;; java-mode
