@@ -438,7 +438,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; but it's too buggy.
 (add-hook 'haskell-mode-hook
           (lambda ()
-            (haskell-indent-mode)
+            (turn-on-haskell-indentation)
             (setq haskell-indent-offset 2)))
 
 ;;;;;;;;
