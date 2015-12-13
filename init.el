@@ -306,41 +306,41 @@ See `expand-file-name'."
 ;; emacs-eclim
 ;; auto-completeの後に読み込む
 ;;;
-;; シンボリックリンクを開いた場合、名前を解決する
-(setq-default find-file-visit-truename t)
+(when (require 'eclim nil 'noerror)
+  (progn
+    ;; シンボリックリンクを開いた場合、名前を解決する
+    (setq-default find-file-visit-truename t)
+    (setq eclim-auto-save t)
+    (setq eclim-executable "~/opt/eclipse/eclim")
+    (global-eclim-mode 1)
 
-(require 'eclim)
-(setq eclim-auto-save t)
-(setq eclim-executable "~/opt/eclipse/eclim")
-(global-eclim-mode 1)
+    ;;(setq help-at-pt-display-when-idle t)
+    ;;(setq help-at-pt-timer-delay 0.9)
+    ;;(help-at-pt-set-timer)
 
-;;(setq help-at-pt-display-when-idle t)
-;;(setq help-at-pt-timer-delay 0.9)
-;;(help-at-pt-set-timer)
-
-;; configuration for auto-complete
-(require 'ac-emacs-eclim-source)
-(ac-emacs-eclim-config)
-;; M-TAB での補完に eclim-complete ではなく auto-complete を用いる
-;;(define-key eclim-mode-map (kbd "M-TAB") 'auto-complete)
-(define-key eclim-mode-map (kbd "C-c C-i") 'auto-complete)
-;; define eclimd start function
-(defun eclim-start-eclimd (workspace)
-  (interactive (list (read-directory-name "workspace: "
-                                          "~/workspace/")))
-  (let* ((eclimd-executable (expand-file-name "~/opt/eclipse/eclimd"))
-        (eclimd-workspace-option (mapconcat 'identity (list "-Dosgi.instance.area.default=\"" (expand-file-name workspace) "\"") ""))
-        (command (mapconcat 'identity (list eclimd-executable eclimd-workspace-option "&") " ")))
-    ;; body
-    (if workspace
-        (shell-command command))))
-;; define eclimd shutdown function
-(defun eclim-shutdown-eclimd ()
-  (interactive)
-  (let* ((eclimd-executable (expand-file-name "~/opt/eclipse/eclim"))
-        (command (mapconcat 'identity (list eclimd-executable "-command" "shutdown") " ")))
-    ;; body
-    (shell-command command)))
+    ;; configuration for auto-complete
+    (require 'ac-emacs-eclim-source)
+    (ac-emacs-eclim-config)
+    ;; M-TAB での補完に eclim-complete ではなく auto-complete を用いる
+    ;;(define-key eclim-mode-map (kbd "M-TAB") 'auto-complete)
+    (define-key eclim-mode-map (kbd "C-c C-i") 'auto-complete)
+    ;; define eclimd start function
+    (defun eclim-start-eclimd (workspace)
+      (interactive (list (read-directory-name "workspace: "
+                                              "~/workspace/")))
+      (let* ((eclimd-executable (expand-file-name "~/opt/eclipse/eclimd"))
+             (eclimd-workspace-option (mapconcat 'identity (list "-Dosgi.instance.area.default=\"" (expand-file-name workspace) "\"") ""))
+             (command (mapconcat 'identity (list eclimd-executable eclimd-workspace-option "&") " ")))
+        ;; body
+        (if workspace
+            (shell-command command))))
+    ;; define eclimd shutdown function
+    (defun eclim-shutdown-eclimd ()
+      (interactive)
+      (let* ((eclimd-executable (expand-file-name "~/opt/eclipse/eclim"))
+             (command (mapconcat 'identity (list eclimd-executable "-command" "shutdown") " ")))
+        ;; body
+        (shell-command command)))))
 
 ;;;;;;;;
 ;; GCL GNU Common Lisp
@@ -353,7 +353,6 @@ See `expand-file-name'."
 ;;     M-x package-install RET jedi RET
 ;;     M-x jedi:install-server RET
 ;;;
-;;(add-to-list 'load-path "~/repo/emacs-jedi.git")
 (require 'python-environment)
 (require 'jedi)
 
@@ -574,7 +573,6 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; You must byte-compile it with your version of Emacs because 
 ;; different versions of Emacs have different byte-compiled formats. 
 ;;;;;;;;
-;;(add-to-list 'load-path (expand-file-name "~/repo/js2-mode.git"))
 (autoload 'js2-mode "js2-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 (add-hook 'js2-mode-hook
@@ -584,7 +582,6 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; navi2ch
 ;;;;;;;;
-(add-to-list 'load-path (expand-file-name "~/repo/navi2ch.git"))
 (autoload 'navi2ch "navi2ch" "Navigator for 2ch for Emacs" t)
 ;; オープン2chを見る C-u s で強制更新
 (setq navi2ch-list-bbstable-url
@@ -673,7 +670,6 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; web-mode
 ;;;;;;;;
-;;(add-to-list 'load-path (expand-file-name "~/repo/web-mode.git"))
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
@@ -695,9 +691,6 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; yasnippet
 ;;;;;;;;
-;;;
-;;(add-to-list 'load-path
-;;             (expand-file-name "~/repo/yasnippet.git"))
 (require 'yasnippet)
 (setq yas-prompt-functions '(yas/ido-prompt))
 (yas-global-mode 1)
