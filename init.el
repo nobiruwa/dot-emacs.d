@@ -658,6 +658,8 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (setq skk-aux-large-jisyo nil)
 ;; ▽モードと▼モード時のアンドゥ情報を記録しない
 (setq skk-undo-kakutei-word-only t)
+;; C-x j のskk-auto-fill-modeは使わない
+(global-set-key "\C-xj" 'skk-mode)
 
 ;;;;;;;;
 ;; undo-tree
