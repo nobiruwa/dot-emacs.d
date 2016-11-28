@@ -22,6 +22,8 @@
 (server-start)
 ;; デバッグをする場合はt
 (setq debug-on-error nil)
+;; カーソルを点灯したままにする
+(setq visible-cursor nil)
 
 ;;;;;;;;
 ;; キーの設定
