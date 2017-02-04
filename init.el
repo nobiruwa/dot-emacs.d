@@ -133,13 +133,6 @@ This requires xclip command."
                                     'split-window-vertically))
 
 ;;;;;;;;
-;; ghc
-;;;;;;;;
-(autoload 'ghc-init "ghc" nil t)
-(autoload 'ghc-debug "ghc" nil t)
-(add-hook 'haskell-mode-hook (lambda () (ghc-init)))
-
-;;;;;;;;
 ;; ido-mode
 ;;;;;;;;
 (require 'ido)
@@ -260,7 +253,7 @@ See `expand-file-name'."
 ;; URL: http://cx4a.org/software/auto-complete/
 ;;;
 (require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d/auto-complete/ac-dict")
+(add-to-list 'ac-dictionary-directories "~/repo/nobiruwa.github/dot-emacs.d.git/ac-dict")
 (ac-config-default)
 
 ;; auto-complete-modeが有効なバッファでのキーバインド
@@ -439,9 +432,21 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;(add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;;;;;;;;
+;; ghc
+;;;;;;;;
+(autoload 'ghc-init "ghc" nil t)
+(autoload 'ghc-debug "ghc" nil t)
+(add-hook 'haskell-mode-hook (lambda () (ghc-init)))
+
+;;;;;;;;
 ;; god-mode
 ;;;;;;;;
 (global-set-key (kbd "\C-\\") 'god-local-mode)
+
+;;;;;;;;
+;; graphviz-dot-mode
+;;;;;;;;
+(setq graphviz-dot-auto-indent-on-semi nil)
 
 ;;;;;;;;
 ;; haskell-mode
