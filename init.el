@@ -446,7 +446,10 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; graphviz-dot-mode
 ;;;;;;;;
+;; cogre-dot-modeがgraphviz-dot-modeを発見できるようrequire
+(require 'graphviz-dot-mode)
 (setq graphviz-dot-auto-indent-on-semi nil)
+(add-hook 'graphviz-dot-mode-hook (lambda () (auto-complete-mode)))
 
 ;;;;;;;;
 ;; haskell-mode
