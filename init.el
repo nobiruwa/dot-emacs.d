@@ -495,15 +495,15 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; ファイル名で逆順ソート（デフォルトはファイルの mtime）
 ;; http://slashdot.jp/journal.pl?op=display&id=254132&uid=3793
 (setq howm-normalizer 'howm-sort-items-by-reverse-date)
-;; ToDo リストで「.」が新しい順に並んでほしい. また, 
+;; ToDo リストで「.」が新しい順に並んでほしい. また,
 ;;「[2008-02-15]． [2008-02-15]:!」は ToDo リストに出したくない. -- 2ch3:443-446n
 ;;; Ref: http://howm.sourceforge.jp/cgi-bin/hiki/hiki.cgi?ReverseDoneReminder
-;; ToDo リストで「.」が新しい順に並んでほしい. 
-(defadvice howm-todo-priority-done 
-  (around reverse-order (late lz item) activate) 
-  (setq late (- late)) ad-do-it) 
-;; しかもメニューに「.」が表示されてほしい. 
-(defvar howm-huge++ 99999) 
+;; ToDo リストで「.」が新しい順に並んでほしい.
+(defadvice howm-todo-priority-done
+  (around reverse-order (late lz item) activate)
+  (setq late (- late)) ad-do-it)
+;; しかもメニューに「.」が表示されてほしい.
+(defvar howm-huge++ 99999)
 (setq howm-menu-todo-priority (- howm-huge++))
 
 ;; Not to treat menu as memo
@@ -591,9 +591,9 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 
 ;;;;;;;;
 ;; js2-mode
-;; It will refuse to run unless you have byte-compiled it. 
-;; You must byte-compile it with your version of Emacs because 
-;; different versions of Emacs have different byte-compiled formats. 
+;; It will refuse to run unless you have byte-compiled it.
+;; You must byte-compile it with your version of Emacs because
+;; different versions of Emacs have different byte-compiled formats.
 ;;;;;;;;
 (autoload 'js2-mode "js2-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
