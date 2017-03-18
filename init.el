@@ -847,6 +847,9 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(column-number-mode t)
  '(line-number-mode t)
  '(menu-bar-mode nil)
+ '(package-selected-packages
+   (quote
+    (yasnippet yaml-mode xclip web-mode undo-tree navi2ch markdown-mode lua-mode js2-mode jedi highlight-indentation graphviz-dot-mode god-mode ghc flycheck-pyflakes emmet-mode elm-mode ddskk coffee-mode bash-completion)))
  '(show-paren-mode t))
 
 (custom-set-faces
