@@ -185,6 +185,9 @@ This requires xclip command."
 ;;;;;;;;
 ;; shell-mode
 ;;;;;;;;
+;; *shell*バッファを現在のウィンドウで開く
+(add-to-list 'display-buffer-alist
+             '("^\\*shell\\*$" . (display-buffer-same-window)))
 ;; shell-modeの拡張
 ;; lsなどの色の設定
 ;; (autoload 'ansi-color-for-comint-mode-on "ansi-color"
