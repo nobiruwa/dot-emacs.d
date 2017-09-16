@@ -852,7 +852,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (bash-completion coffee-mode ddskk elm-mode elpy emmet-mode f flycheck flycheck-pyflakes ggtags ghc god-mode graphviz-dot-mode haskell-mode idomenu jedi js2-mode lua-mode markdown-mode navi2ch swiper typescript-mode undo-tree web-mode xclip yaml-mode yasnippet)))
+    (bash-completion coffee-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes ggtags ghc god-mode graphviz-dot-mode haskell-mode idomenu jedi js2-mode lua-mode markdown-mode navi2ch swiper typescript-mode undo-tree web-mode xclip yaml-mode yasnippet)))
  '(show-paren-mode t))
 
 (custom-set-faces
