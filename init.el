@@ -26,7 +26,7 @@
 (setq visible-cursor nil)
 
 ;;;;;;;;
-;; キーの設定
+;; 特定のモードに関連付けられないキーの設定
 ;;;;;;;;
 ;; C-zを無効にする
 (global-set-key "\C-z" nil)
@@ -59,7 +59,8 @@ This requires xclip command."
         (insert xclip-output)))))
 
 ;; pasteをセットすると、yank時に同内容のテキストが2つずつ入っているように見える
-;; pasteはShift-Insertで行えばよいのでnilとする
+;; pasteはM-x my-xclip-paste-functionかShift-Insertで行えばよいのでnilとする
+;; 前者はM-x my-p TABで展開できるうちはキーの割り当ては不要だろう
 (when (and (not window-system) (not (eq system-type 'cygwin))
          (executable-find "xclip"))
   (setq interprogram-cut-function 'my-xclip-cut-function)
@@ -867,7 +868,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (bash-completion coffee-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes ggtags ghc god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode idomenu jedi js2-mode lua-mode markdown-mode navi2ch powershell shakespeare-mode swiper typescript-mode undo-tree web-mode xclip yaml-mode yasnippet)))
+    (bash-completion coffee-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes ggtags ghc god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode idomenu jedi js2-mode lua-mode markdown-mode navi2ch powershell restclient shakespeare-mode swiper typescript-mode undo-tree web-mode xclip yaml-mode yasnippet)))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
