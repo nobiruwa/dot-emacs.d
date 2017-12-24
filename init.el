@@ -645,6 +645,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; Ref: http://ubulog.blogspot.com/2010/08/emacs-sudo2.html
 ;;;;;;;;
 (require 'reopen-as-root)
+
 ;;;;;;;;
 ;; reopen-file
 ;;;;;;;;
@@ -695,6 +696,14 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; C-x j のskk-auto-fill-modeは使わない
 (global-set-key "\C-xj" 'skk-mode)
 (global-set-key "\C-x\C-j" 'skk-mode)
+
+;;;;;;;;
+;; slime-helper
+;;;;;;;;
+;; sbcl REPLで(ql:quickload "quicklisp-slime-helper")を実行した後に
+(let ((slime-helper (expand-file-name "~/quicklisp/slime-helper.el")))
+  (when (file-exists-p slime-helper) (load slime-helper)))
+
 ;;;;;;;;
 ;; undo-tree
 ;;;;;;;;
