@@ -597,6 +597,8 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; intero
 ;;;;;;;;
+(require 'intero)
+(setq intero-blacklist '("~/haskellprojects/fay-example" "~/haskellprojects/ghcjs-example"))
 (intero-global-mode 1)
 
 ;;;;;;;;
