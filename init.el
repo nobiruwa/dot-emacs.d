@@ -436,11 +436,11 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;(add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;;;;;;;;
-;; ghc
+;; ghc ( -> intero)
 ;;;;;;;;
-(autoload 'ghc-init "ghc" nil t)
-(autoload 'ghc-debug "ghc" nil t)
-(add-hook 'haskell-mode-hook (lambda () (ghc-init)))
+;; (autoload 'ghc-init "ghc" nil t)
+;; (autoload 'ghc-debug "ghc" nil t)
+;; (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
 
 ;;;;;;;;
 ;; god-mode
@@ -593,6 +593,11 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; *.howm を outline-mode に
 ;; Ref: http://howm.sourceforge.jp/cgi-bin/hiki/hiki.cgi?OutlineMode
 ;;(add-to-list 'auto-mode-alist '("\\.howm$" . outline-mode))
+
+;;;;;;;;
+;; intero
+;;;;;;;;
+(intero-global-mode 1)
 
 ;;;;;;;;
 ;; java-mode-indent-annotations.el --- Indentation for Java 5 annotations.
@@ -877,7 +882,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (ac-slime bash-completion coffee-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes ggtags ghc god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode idomenu jedi js2-mode lua-mode markdown-mode navi2ch powershell restclient shakespeare-mode slime swiper typescript-mode undo-tree web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
+    (ac-slime bash-completion coffee-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes ggtags god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode idomenu intero jedi js2-mode lua-mode markdown-mode navi2ch powershell restclient shakespeare-mode slime swiper typescript-mode undo-tree web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
