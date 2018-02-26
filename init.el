@@ -301,7 +301,9 @@ See `expand-file-name'."
 ;; See cedet/common/cedet.info for configuration details.
 ;; IMPORTANT: Tou must place this *before* any CEDET component (including
 ;; EIEIO) gets activated by another package (Gnus, auth-source, ...).
-(load-file (expand-file-name "~/repo/cedet.git/cedet-devel-load.el"))
+(let ((cedet-devel (expand-file-name "~/repo/cedet.git/cedet-devel-load.el")))
+  (when (file-exists-p cedet-devel)
+    (load-file cedet-devel)))
 ;; DBファイルを一ヶ所に集約
 (setq semanticdb-default-save-directory "~/.emacs.d/semantic")
 ;; disable semantic-mode and global-*-mode in CEDET
@@ -479,15 +481,14 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; howm
 ;;;;;;;;
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/howm/site-lisp"))
+;; ロード
+(require 'howm)
 ;; キーの再割り当て
 (setq howm-prefix "\C-z,")
 ;; howm開始
 (global-set-key "\C-z,," 'howm-menu)
 ;; メニューの言語
 (setq howm-menu-lang 'en)
-;; ロード
-(require 'howm)
 ;;ファイルの関連付け
 (setq howm-view-external-viewer-assoc
       '(("\.\\(pdf\\)$"      . "evince %s")
@@ -884,7 +885,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (ac-slime bash-completion coffee-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes ggtags god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode idomenu intero jedi js2-mode lua-mode markdown-mode navi2ch powershell restclient shakespeare-mode slime swiper typescript-mode undo-tree web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
+    (ac-slime bash-completion coffee-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes ggtags god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu intero jedi js2-mode lua-mode markdown-mode navi2ch powershell restclient shakespeare-mode slime swiper typescript-mode undo-tree web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
