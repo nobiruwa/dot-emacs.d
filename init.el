@@ -885,7 +885,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (ac-slime bash-completion coffee-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes ggtags god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu intero jedi js2-mode lua-mode markdown-mode navi2ch powershell restclient shakespeare-mode slime swiper typescript-mode undo-tree web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
+    (ac-slime bash-completion browse-kill-ring coffee-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes ggtags god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu intero jedi js2-mode lua-mode markdown-mode navi2ch powershell restclient shakespeare-mode slime swiper typescript-mode undo-tree web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
