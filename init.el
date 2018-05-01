@@ -648,6 +648,14 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
    (add-hook 'csharp-mode-hook 'omnisharp-mode)))
 
 ;;;;;;;;
+;; purescript-mode
+;;;;;;;;
+(add-hook 'purescript-mode-hook
+          (lambda ()
+            (setq haskell-literate nil)
+            (haskell-indentation-mode)))
+
+;;;;;;;;
 ;; reopen-as-root
 ;; 下記URLのEmacs Lispをファイルreopen-as-root.elに保存した
 ;; Ref: http://ubulog.blogspot.com/2010/08/emacs-sudo2.html
@@ -885,7 +893,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (ac-slime bash-completion browse-kill-ring coffee-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes ggtags god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu intero jedi js2-mode lua-mode markdown-mode navi2ch powershell restclient shakespeare-mode slime swiper typescript-mode undo-tree web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
+    (ac-slime bash-completion browse-kill-ring coffee-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes ggtags god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu intero jedi js2-mode lua-mode markdown-mode navi2ch powershell purescript-mode restclient shakespeare-mode slime swiper typescript-mode undo-tree web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
