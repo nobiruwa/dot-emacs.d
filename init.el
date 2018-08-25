@@ -566,19 +566,29 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
   (kill-buffer nil))
 
 ;; リージョンの単語をソートする
+(defvar separators-per-mode
+  '((emacs-lisp-mode " +" " ")
+    (haskell-mode ", *" ", ")
+    (otherwise ", *" ", ")))
+
 (defun my-sort-words-in-region (start end)
   "sort words separated white spaces in the current region."
   (interactive "r")
-  (replace-string
-   (buffer-substring start end)
-   (my-sort-words-in-line (buffer-substring start end))
-   nil start end))
+  (let* ((separators (if (assoc major-mode separators-per-mode)
+                        (assoc major-mode separators-per-mode)
+                       (assoc 'otherwise separators-per-mode)))
+         (sep-regexp (cadr separators))
+         (sep-fixed (caddr separators)))
+    (replace-string
+     (buffer-substring start end)
+     (my-sort-words-in-line (buffer-substring start end) sep-regexp sep-fixed)
+     nil start end)))
 
 ;; 文字列内の単語をソートする
-(defun my-sort-words-in-line (text)
+(defun my-sort-words-in-line (text sep-regexp sep-fixed)
   "sort words separated white spaces in a line."
   (mapconcat 'identity (sort
-   (split-string text " +") 'string<) " "))
+   (split-string text sep-regexp) 'string<) sep-fixed))
 
 ;; howm-mode-hook
 (add-hook 'howm-mode-hook
