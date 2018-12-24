@@ -313,17 +313,20 @@ See `expand-file-name'."
 ;;;
 ;; company-mode
 ;;;
-(require 'comapny)
+(require 'company)
 
 (with-eval-after-load "company"
   (global-company-mode +1)
   ;; C-[ C-i
-  (global-set-key (kbd "C-M-i") 'company-complete))
+  (global-set-key (kbd "C-M-i") 'company-complete)
+
+  (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)
+  (define-key lisp-interaction-mode-map (kbd "C-M-i") 'company-complete))
 
 ;;
 ;; comapny-dict
 ;;;
-(require 'comapny-dict)
+(require 'company-dict)
 
 (setq company-dict-dir "~/repo/nobiruwa.github/dot-emacs.d.git/company-dict")
 
