@@ -252,35 +252,35 @@ See `expand-file-name'."
 
 ;;;;;;;;;;;;; 以下、ELispファイルを追加する必要があるものを設定 ;;;;;;
 ;;;;;;;;;;;;; アルファベット順になるよう努力 ;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;; auto-complete
-;; URL: http://cx4a.org/software/auto-complete/
-;;;
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/repo/nobiruwa.github/dot-emacs.d.git/ac-dict")
-(ac-config-default)
+;; ;;;
+;; ;; auto-complete
+;; ;; URL: http://cx4a.org/software/auto-complete/
+;; ;;;
+;; (require 'auto-complete-config)
+;; (add-to-list 'ac-dictionary-directories "~/repo/nobiruwa.github/dot-emacs.d.git/ac-dict")
+;; (ac-config-default)
 
-;; auto-complete-modeが有効なバッファでのキーバインド
-;;(define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
-(define-key ac-mode-map (kbd "C-c C-i") 'auto-complete)
-;; 自動で補完しない
-(setq ac-auto-start nil)
-;; yasnippetを情報源に追加する
-(add-to-list 'ac-sources 'ac-source-yasnippet)
+;; ;; auto-complete-modeが有効なバッファでのキーバインド
+;; ;;(define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
+;; (define-key ac-mode-map (kbd "C-c C-i") 'auto-complete)
+;; ;; 自動で補完しない
+;; (setq ac-auto-start nil)
+;; ;; yasnippetを情報源に追加する
+;; (add-to-list 'ac-sources 'ac-source-yasnippet)
 
-;; 補完メニュー表示時のキーマップ
-(setq ac-use-menu-map t)
-;; Enter, C-m で補完を終了させる
-;; 改行をさせない
-;;(define-key ac-menu-map [return] 'ac-complete)
+;; ;; 補完メニュー表示時のキーマップ
+;; (setq ac-use-menu-map t)
+;; ;; Enter, C-m で補完を終了させる
+;; ;; 改行をさせない
+;; ;;(define-key ac-menu-map [return] 'ac-complete)
 
-;; html-modeでac-modeを有効にする
-(add-to-list 'ac-modes 'html-mode)
-;; js2-modeでac-modeを有効にする
-(add-to-list 'ac-modes 'js2-mode)
+;; ;; html-modeでac-modeを有効にする
+;; (add-to-list 'ac-modes 'html-mode)
+;; ;; js2-modeでac-modeを有効にする
+;; (add-to-list 'ac-modes 'js2-mode)
 
-;; 全てのバッファーでauto-complete modeを有効にする
-(global-auto-complete-mode t)
+;;;; 全てのバッファーでauto-complete modeを有効にする
+;; (global-auto-complete-mode t)
 
 ;;;
 ;; bash-completion
@@ -309,6 +309,25 @@ See `expand-file-name'."
 ;; disable semantic-mode and global-*-mode in CEDET
 ;; CEDET conflicts js2-mode, python-mode
 (semantic-mode -1)
+
+;;;
+;; company-mode
+;;;
+(require 'comapny)
+
+(with-eval-after-load "company"
+  (global-company-mode +1)
+  ;; C-[ C-i
+  (global-set-key (kbd "C-M-i") 'company-complete))
+
+;;
+;; comapny-dict
+;;;
+(require 'comapny-dict)
+
+(setq company-dict-dir "~/repo/nobiruwa.github/dot-emacs.d.git/company-dict")
+
+(add-to-list 'company-backends 'company-dict)
 
 ;;;
 ;; emacs-eclim
@@ -903,7 +922,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (ac-slime bash-completion browse-kill-ring coffee-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes ggtags god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu intero jedi js2-mode lua-mode markdown-mode navi2ch powershell purescript-mode restclient shakespeare-mode slime swiper typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
+    (ac-slime bash-completion browse-kill-ring coffee-mode company-dict ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes ggtags god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu intero jedi js2-mode lua-mode markdown-mode navi2ch powershell purescript-mode restclient shakespeare-mode slime swiper typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
