@@ -312,25 +312,35 @@ See `expand-file-name'."
 
 ;;;
 ;; company-mode
+;; company-*
 ;;;
 (require 'company)
+
+;; company-backends
+(require 'company-dict)
+(setq company-dict-dir "~/repo/nobiruwa.github/dot-emacs.d.git/company-dict")
 
 (with-eval-after-load "company"
   (global-company-mode +1)
   ;; C-[ C-i
   (global-set-key (kbd "C-M-i") 'company-complete)
-
   (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)
-  (define-key lisp-interaction-mode-map (kbd "C-M-i") 'company-complete))
+  (define-key lisp-interaction-mode-map (kbd "C-M-i") 'company-complete)
 
-;;
-;; comapny-dict
-;;;
-(require 'company-dict)
-
-(setq company-dict-dir "~/repo/nobiruwa.github/dot-emacs.d.git/company-dict")
-
-(add-to-list 'company-backends 'company-dict)
+  (setq company-backends
+        '(company-bbdb
+          company-nxml
+          company-css
+          company-eclim
+          company-semantic
+          company-clang
+          company-xcode
+          company-cmake
+          company-capf
+          company-files
+          (company-dabbrev-code company-gtags company-etags company-keywords company-dict)
+          company-oddmuse
+          company-dabbrev)))
 
 ;;;
 ;; emacs-eclim
