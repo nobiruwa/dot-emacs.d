@@ -58,6 +58,8 @@ This requires xclip command."
       (unless (string= (car kill-ring) xclip-output)
         (insert xclip-output)))))
 
+(global-set-key (kbd "C-c C-y") 'my-xclip-paste-function)
+
 ;; pasteをセットすると、yank時に同内容のテキストが2つずつ入っているように見える
 ;; pasteはM-x my-xclip-paste-functionかShift-Insertで行えばよいのでnilとする
 ;; 前者はM-x my-p TABで展開できるうちはキーの割り当ては不要だろう
@@ -173,6 +175,10 @@ This requires xclip command."
 (require 'org)
 (setq org-startup-folded nil)
 (setq org-startup-truncated nil)
+;; https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-lisp.html
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((lisp . t)))
 
 ;;;;;;;;
 ;; package.el (MELPA)
