@@ -324,6 +324,8 @@ See `expand-file-name'."
 
 ;; company-backends
 (require 'company-dict)
+(require 'company-lsp)
+
 (setq company-dict-dir "~/repo/nobiruwa.github/dot-emacs.d.git/company-dict")
 
 (with-eval-after-load "company"
@@ -339,12 +341,13 @@ See `expand-file-name'."
           company-css
           company-eclim
           company-semantic
+          company-lsp
           company-clang
           company-xcode
           company-cmake
           company-capf
           company-files
-          (company-dabbrev-code company-gtags company-etags company-keywords company-dict)
+          (company-dabbrev-code company-etags company-keywords company-dict)
           company-oddmuse
           company-dabbrev)))
 
@@ -677,6 +680,23 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
        (setq js2-basic-offset 2)))
 
 ;;;;;;;;
+;; lsp-mode
+;;;;;;;;
+(require 'lsp-mode)
+(setq lsp-clients-clangd-executable "/usr/bin/clangd-7")
+(setq lsp-prefer-flymake nil)
+(add-hook 'c-mode-hook #'lsp)
+(add-hook 'c++-mode-hook
+          ;; # apt-get install clang-tools-7 # libclang-devのメジャーバージョンと合わせる
+          ;; C++ではclang-formatが必要
+          #'lsp)
+
+;;;;;;;;
+;; lsp-ui
+;;;;;;;;
+(require 'lsp-ui)
+
+;;;;;;;;
 ;; navi2ch
 ;;;;;;;;
 (autoload 'navi2ch "navi2ch" "Navigator for 2ch for Emacs" t)
@@ -941,7 +961,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (ac-slime bash-completion browse-kill-ring coffee-mode company-dict ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes ggtags god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu intero jedi js2-mode lua-mode markdown-mode navi2ch powershell purescript-mode restclient shakespeare-mode slime swiper typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
+    (ac-slime bash-completion browse-kill-ring clang-format coffee-mode company-dict company-lsp ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu intero jedi js2-mode lsp-mode lsp-ui lua-mode markdown-mode navi2ch powershell purescript-mode restclient shakespeare-mode slime swiper typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
@@ -953,8 +973,8 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(flymake-errline ((t (:underline "red"))))
- '(flymake-warnline ((t (:underline "yellow")))))
+ '(flymake-error ((t (:underline "red"))))
+ '(flymake-warning ((t (:underline "yellow")))))
 
 (provide 'init)
 ;;; init.el ends here
