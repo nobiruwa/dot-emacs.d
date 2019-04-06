@@ -973,8 +973,8 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(flymake-error ((t (:underline "red"))))
- '(flymake-warning ((t (:underline "yellow")))))
+ '(flymake-errline ((t (:underline "red"))) t)
+ '(flymake-warnline ((t (:underline "yellow"))) t))
 
 (provide 'init)
 ;;; init.el ends here
