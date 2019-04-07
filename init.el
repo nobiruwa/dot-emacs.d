@@ -298,6 +298,12 @@ See `expand-file-name'."
 ;; (add-hook 'shell-command-complete-functions
 ;;           'bash-completion-dynamic-complete)
 
+;;;;;;;;
+;; ccls
+;;;;;;;;
+(require 'ccls)
+(setq ccls-executable (expand-file-name "~/repo/ccls.git/Release/ccls"))
+
 ;;;
 ;; cedet, ede, semantic, etc.
 ;; Ref: Emacs Part 31
@@ -316,6 +322,12 @@ See `expand-file-name'."
 ;; CEDET conflicts js2-mode, python-mode
 (semantic-mode -1)
 
+;;;;;;;;
+;; clang-format
+;;;;;;;;
+(require 'clang-format)
+(setq clang-format-executable "/usr/bin/clang-format-7")
+
 ;;;
 ;; company-mode
 ;; company-*
@@ -323,6 +335,10 @@ See `expand-file-name'."
 (require 'company)
 
 ;; company-backends
+(require 'company-clang)
+(setq company-clang-executable (executable-find "/usr/bin/clang-7"))
+(setq company-clang--version '(normal . 7.0))
+
 (require 'company-dict)
 (require 'company-lsp)
 
@@ -685,11 +701,10 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (require 'lsp-mode)
 (setq lsp-clients-clangd-executable "/usr/bin/clangd-7")
 (setq lsp-prefer-flymake nil)
+;; # apt-get install clang-tools-7 # libclang-devのメジャーバージョンと合わせる
+;; C++ではclang-formatが必要
 (add-hook 'c-mode-hook #'lsp)
-(add-hook 'c++-mode-hook
-          ;; # apt-get install clang-tools-7 # libclang-devのメジャーバージョンと合わせる
-          ;; C++ではclang-formatが必要
-          #'lsp)
+(add-hook 'c++-mode-hook #'lsp)
 
 ;;;;;;;;
 ;; lsp-ui
@@ -850,8 +865,6 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
       (concat (downcase (substring obj 0 1)) (substring obj 1))
     ""))
 
-
-
 ;;;;;;;;;;;;;;;
 ;; MeadowMemo http://www.bookshelf.jp/soft/ の管理人が
 ;; 自作したEmacs Lisp
@@ -961,7 +974,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (ac-slime bash-completion browse-kill-ring clang-format coffee-mode company-dict company-lsp ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu intero jedi js2-mode lsp-mode lsp-ui lua-mode markdown-mode navi2ch powershell purescript-mode restclient shakespeare-mode slime swiper typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
+    (ac-slime bash-completion browse-kill-ring ccls clang-format coffee-mode company-dict company-lsp ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu intero jedi js2-mode lsp-mode lsp-ui lua-mode markdown-mode navi2ch powershell purescript-mode restclient shakespeare-mode slime swiper typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
@@ -973,8 +986,8 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(flymake-errline ((t (:underline "red"))) t)
- '(flymake-warnline ((t (:underline "yellow"))) t))
+ '(flymake-error ((t (:underline "red"))))
+ '(flymake-warning ((t (:underline "yellow")))))
 
 (provide 'init)
 ;;; init.el ends here
