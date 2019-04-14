@@ -111,17 +111,23 @@ This requires xclip command."
 ;;;;;;;;
 ;; all CC Mode modes
 ;;;;;;;;
-(add-hook 'c-mode-common-hook (lambda ()
-   (c-set-style "bsd")
-   (setq c-basic-offset 4)
-   (setq indent-tabs-mode nil)))
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (put 'c-file-offsets 'safe-local-variable 'listp)
+            (c-set-style "bsd")
+            (c-set-offset 'c-basic-offset 2)
+            (c-set-offset 'arglist-close 0)
+            (c-set-offset 'case-label 2)
+            (setq indent-tabs-mode nil)))
 
 ;;;;;;;;
 ;; C++ mode (c++-mode)
 ;;;;;;;;
-(add-hook 'c++-mode-hook '(lambda ()
-                            (setq indent-tabs-mode nil)
-                            (setq c-basic-offset 4)))
+;; (add-hook 'c++-mode-hook
+;;           (lambda ()
+;;             (c-set-style "bsd")
+;;             (setq indent-tabs-mode nil)
+;;             (setq c-basic-offset 2)))
 
 ;;;;;;;;
 ;; ediff
