@@ -115,9 +115,9 @@ This requires xclip command."
           (lambda ()
             (put 'c-file-offsets 'safe-local-variable 'listp)
             (c-set-style "bsd")
-            (c-set-offset 'c-basic-offset 2)
             (c-set-offset 'arglist-close 0)
             (c-set-offset 'case-label 2)
+            (setq c-basic-offset 2)
             (setq indent-tabs-mode nil)))
 
 ;;;;;;;;
