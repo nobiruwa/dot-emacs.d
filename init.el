@@ -703,6 +703,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 
 ;;;;;;;;
 ;; lsp-java
+;; 補完が効かない場合はM-x lsp-java-update-project-configurationを試すこと
 ;;;;;;;;
 (require 'lsp-java)
 (add-hook 'java-mode-hook #'lsp)
