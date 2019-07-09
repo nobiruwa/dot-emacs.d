@@ -706,6 +706,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; 補完が効かない場合はM-x lsp-java-update-project-configurationを試すこと
 ;;;;;;;;
 (require 'lsp-java)
+(setq lsp-java-java-path (expand-file-name "~/.jenv/shims/java"))
 (add-hook 'java-mode-hook #'lsp)
 
 ;;;;;;;;
