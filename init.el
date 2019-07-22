@@ -192,7 +192,7 @@ This requires xclip command."
 ;; (See also: https://github.com/milkypostman/melpa#usage)
 (require 'package)
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+             '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
 ;;;;;;;;
@@ -715,8 +715,10 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 
 ;;;;;;;;
 ;; lsp-java
+;; 補完が効かない場合はM-x lsp-java-update-project-configurationを試すこと
 ;;;;;;;;
 (require 'lsp-java)
+(setq lsp-java-java-path (expand-file-name "~/.jenv/shims/java"))
 (add-hook 'java-mode-hook #'lsp)
 
 ;;;;;;;;
