@@ -206,7 +206,26 @@ This requires xclip command."
 ;; (autoload 'ansi-color-for-comint-mode-on "ansi-color"
 ;;  "Set `ansi-color-for-comint-mode' to t." t)
 ;;(setq ansi-color-names-vector ["black" "red3" "green3" "yellow3" "navy" "magenta3" "cyan3" "white"])
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+(defun first-to-last (suffix list)
+  "先頭の要素がSUFFIXを含む場合、LISTの先頭要素を末尾に移動した新しいリストを返します。"
+  (if (string-suffix-p suffix (nth 0 list))
+      (let* ((first (car list))
+            (deleted (remove first list)))
+        (add-to-list 'deleted first t))
+    list))
+
+(defun company--sort-with-making-special-name-at-the-end (candidates)
+  "`../`があればリストの後ろに、`./`があればリストの後ろに置きます。"
+  (first-to-last "./" (first-to-last "../" candidates)))
+
+(add-hook 'shell-mode-hook
+          (lambda ()
+            ;; 存在しないファイル名の入力をスムーズにするため
+            (setq-local company-require-match nil)
+            ;; 色付け
+            (ansi-color-for-comint-mode-on)
+            ;; "../" "./"を後ろに回す
+            (setq-local company-transformers '(company--sort-with-making-special-name-at-the-end))))
 
 ;;;;;;;;
 ;; uniquify
@@ -676,13 +695,6 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (intero-global-mode 1)
 
 ;;;;;;;;
-;; java-mode-indent-annotations.el --- Indentation for Java 5 annotations.
-;;;;;;;;
-(require 'java-mode-indent-annotations)
-(add-hook 'java-mode-hook '(lambda ()
-                             (java-mode-indent-annotations-setup)))
-
-;;;;;;;;
 ;; js-mode
 ;;;;;;;;
 (add-hook 'js-mode-hook
@@ -988,7 +1000,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (ac-slime bash-completion browse-kill-ring ccls clang-format coffee-mode company-dict company-lsp ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu intero jedi js2-mode lsp-java lsp-mode lsp-ui lua-mode markdown-mode navi2ch powershell purescript-mode restclient shakespeare-mode slime swiper typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
+    (ac-slime bash-completion browse-kill-ring ccls clang-format coffee-mode company-dict company-lsp ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu intero jedi js2-mode lsp-java lsp-mode lsp-ui lua-mode markdown-mode navi2ch powershell purescript-mode restclient shakespeare-mode slime swiper treemacs typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
