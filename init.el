@@ -208,7 +208,7 @@ This requires xclip command."
 ;;(setq ansi-color-names-vector ["black" "red3" "green3" "yellow3" "navy" "magenta3" "cyan3" "white"])
 (defun first-to-last (suffix list)
   "先頭の要素がSUFFIXを含む場合、LISTの先頭要素を末尾に移動した新しいリストを返します。"
-  (if (string-suffix-p suffix (nth 0 list))
+  (if (and list (string-suffix-p suffix (nth 0 list)))
       (let* ((first (car list))
             (deleted (remove first list)))
         (add-to-list 'deleted first t))
