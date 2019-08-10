@@ -326,6 +326,9 @@ See `expand-file-name'."
 ;;;;;;;;
 ;; ccls
 ;;;;;;;;
+;; build by the following commands.
+;; $ cmake -H. -Brelease -DCMAKE_BUILD_TYPE=Release
+;; $ cmake --build release
 (require 'ccls)
 (setq ccls-executable (expand-file-name "~/repo/ccls.git/release/ccls"))
 
