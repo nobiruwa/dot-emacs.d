@@ -327,7 +327,7 @@ See `expand-file-name'."
 ;; ccls
 ;;;;;;;;
 (require 'ccls)
-(setq ccls-executable (expand-file-name "~/repo/ccls.git/Release/ccls"))
+(setq ccls-executable (expand-file-name "~/repo/ccls.git/release/ccls"))
 
 ;;;
 ;; cedet, ede, semantic, etc.
