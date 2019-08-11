@@ -194,6 +194,10 @@ This requires xclip command."
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
+;; 26.3になるまでは以下のバグを回避するために必要
+;; https://www.reddit.com/r/emacs/comments/cdei4p/failed_to_download_gnu_archive_bad_request/
+;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
 ;;;;;;;;
 ;; shell-mode
@@ -772,8 +776,18 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 (when (require 'omnisharp nil 'noerror)
   (progn
-   (setq omnisharp-server-executable-path (expand-file-name "~/repo/omnisharp-server.git/OmniSharp/bin/Debug/OmniSharp.exe"))
-   (add-hook 'csharp-mode-hook 'omnisharp-mode)))
+    ;; You can install by M-x omnisharp-install-server
+    ;; but I chose install requirements manually.
+    ;; download .NET Core Binaries from: https://dotnet.microsoft.com/download/dotnet-core/2.2 and add it to PATH.
+    ;; $ wget https://roslynomnisharp.blob.core.windows.net/releases/latest/omnisharp-linux-x64.tar.gz
+    ;; $ tar -C ~/opt/omnisharp-linux-x64
+    ;; $ cd ~/opt && ln -s omnisharp-linux-x64 omnisharp
+    (setq omnisharp-server-executable-path (expand-file-name "~/opt/omnisharp/run"))
+    (add-hook 'csharp-mode-hook 'omnisharp-mode)
+    (eval-after-load
+        'company
+      '(add-to-list 'company-backends 'company-omnisharp))
+    (add-hook 'csharp-mode-hook #'company-mode)))
 
 ;;;;;;;;
 ;; purescript-mode
@@ -1017,15 +1031,15 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(column-number-mode t)
  '(line-number-mode t)
  '(menu-bar-mode nil)
- '(tool-bar-mode 0)
  '(package-selected-packages
    (quote
-    (ac-slime bash-completion browse-kill-ring ccls clang-format coffee-mode company-dict company-lsp ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu intero jedi js2-mode lsp-java lsp-mode lsp-ui lua-mode markdown-mode navi2ch powershell purescript-mode restclient shakespeare-mode slime swiper treemacs typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
+    (ac-slime bash-completion browse-kill-ring ccls clang-format coffee-mode company-dict company-lsp csharp-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu intero jedi js2-mode lsp-java lsp-mode lsp-ui lua-mode markdown-mode navi2ch omnisharp powershell purescript-mode restclient shakespeare-mode slime swiper treemacs typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
      (haskell-indent-spaces . 4))))
- '(show-paren-mode t))
+ '(show-paren-mode t)
+ '(tool-bar-mode 0))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
