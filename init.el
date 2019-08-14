@@ -702,6 +702,14 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (intero-global-mode 1)
 
 ;;;;;;;;
+;; ivy-mode
+;;;;;;;;
+(require 'ivy)
+;; M-x lsp-java-generate-overrides や M-x lsp-java-spring-initializr など、複数の選択肢から選択する際に使う
+;; ivyのキーマップには登録されていないが必要不可欠な関数なので、ここで登録する
+(define-key ivy-minibuffer-map (kbd "M-RET") 'ivy-mark)
+
+;;;;;;;;
 ;; js-mode
 ;;;;;;;;
 (add-hook 'js-mode-hook
