@@ -864,11 +864,23 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (global-set-key "\C-x\C-j" 'skk-mode)
 
 ;;;;;;;;
+;; slime
 ;; slime-helper
 ;;;;;;;;
-;; sbcl REPLで(ql:quickload "quicklisp-slime-helper")を実行した後に
-(let ((slime-helper (expand-file-name "~/quicklisp/slime-helper.el")))
-  (when (file-exists-p slime-helper) (load slime-helper)))
+;; with roswell
+;; $ cd ~/repo
+;; $ git clone https://github.com/roswell/roswell roswell.git
+;; $ cd roswell.git
+;; $ ./bootstrap
+;; $ ./configure --prefix=$HOME/opt/roswell
+;; $ make
+;; $ make install
+
+;; https://github.com/roswell/roswell/wiki/Initial-Recommended-Setup#for-emacs
+(let ((slime-helper (expand-file-name "~/.roswell/helper.el")))
+  (when (file-exists-p slime-helper)
+    (load slime-helper)
+    (setq inferior-lisp-program "ros -Q run")))
 
 ;;;;;;;;
 ;; undo-tree
