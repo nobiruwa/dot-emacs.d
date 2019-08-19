@@ -865,6 +865,10 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 
 ;;;;;;;;
 ;; slime
+;;;;;;;;
+(require 'slime)
+
+;;;;;;;;
 ;; slime-helper
 ;;;;;;;;
 ;; with roswell
@@ -875,11 +879,20 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; $ ./configure --prefix=$HOME/opt/roswell
 ;; $ make
 ;; $ make install
-
 ;; https://github.com/roswell/roswell/wiki/Initial-Recommended-Setup#for-emacs
 (let ((slime-helper (expand-file-name "~/.roswell/helper.el")))
   (when (file-exists-p slime-helper)
     (load slime-helper)
+
+    ;; SLIMEとSKKとの衝突を回避する設定
+    ;; 特定の場面で、SLIMEとSKKとの間でスペースキーのキーバインドが競合して、SKKでの変換ができなくなります。
+    ;; https://lisphub.jp/common-lisp/cookbook/index.cgi?SLIME#H-33uy3rfpe0845
+    (defun my-slime-space (n)
+      (interactive "p")
+      (if (and (boundp 'skk-henkan-mode) skk-henkan-mode)
+          (skk-insert n)
+        (slime-autodoc-space n)))
+    (define-key slime-autodoc-mode-map " " 'my-slime-space)
     (setq inferior-lisp-program "ros -Q run")))
 
 ;;;;;;;;
