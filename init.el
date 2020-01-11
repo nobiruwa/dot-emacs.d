@@ -194,10 +194,6 @@ This requires xclip command."
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
-;; 26.3になるまでは以下のバグを回避するために必要
-;; https://www.reddit.com/r/emacs/comments/cdei4p/failed_to_download_gnu_archive_bad_request/
-;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
 ;;;;;;;;
 ;; shell-mode
