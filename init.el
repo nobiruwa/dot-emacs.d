@@ -194,10 +194,6 @@ This requires xclip command."
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
-;; 26.3になるまでは以下のバグを回避するために必要
-;; https://www.reddit.com/r/emacs/comments/cdei4p/failed_to_download_gnu_archive_bad_request/
-;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
 ;;;;;;;;
 ;; shell-mode
@@ -842,6 +838,14 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (define-key ctl-x-map "\C-r"  'reopen-file)
 
 ;;;;;;;;
+;; plantuml-mode
+;;;;;;;;
+(require 'plantuml-mode)
+(add-hook 'plantuml-mode-hook
+          (lambda ()
+            (setq plantuml-jar-path (expand-file-name "~/opt/plantuml/plantuml.jar"))))
+
+;;;;;;;;
 ;; skk
 ;;;;;;;;
 ;; skk-modeが有効になると、C-jがskk-kakutei-keyにバインドされる
@@ -903,6 +907,15 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; rxvt-unicode detects C-c C-/ as C-c C-_
 (define-key undo-tree-map (kbd "C-c C-/") 'undo-tree-redo)
 (define-key undo-tree-map (kbd "C-c C-_") 'undo-tree-redo)
+
+;;;;;;;;
+;; vue-mode
+;;;;;;;;
+(require 'vue-mode)
+(add-hook 'vue-mode-hook
+          (lambda ()
+            (setq mmm-js-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))
+            (setq mmm-typescript-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))))
 
 ;;;;;;;;
 ;; wdired
@@ -1066,7 +1079,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (nginx-mode ac-slime bash-completion browse-kill-ring ccls clang-format coffee-mode company-dict company-lsp csharp-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu intero jedi js2-mode lsp-java lsp-mode lsp-ui lua-mode markdown-mode navi2ch omnisharp powershell purescript-mode restclient shakespeare-mode slime swiper treemacs typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
+    (ac-slime bash-completion browse-kill-ring ccls clang-format coffee-mode company-dict company-lsp csharp-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu intero jedi js2-mode lsp-java lsp-mode lsp-ui lua-mode markdown-mode navi2ch nginx-mode omnisharp plantuml-mode powershell purescript-mode restclient shakespeare-mode slime swiper tidal treemacs typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
