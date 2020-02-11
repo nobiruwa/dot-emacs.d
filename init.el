@@ -918,6 +918,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (require 'vue-mode)
 (add-hook 'vue-mode-hook
           (lambda ()
+            (setq vue-html-extra-indent 2)
             (setq mmm-js-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))
             (setq mmm-typescript-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))))
 
