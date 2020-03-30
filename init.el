@@ -690,12 +690,12 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; Ref: http://howm.sourceforge.jp/cgi-bin/hiki/hiki.cgi?OutlineMode
 ;;(add-to-list 'auto-mode-alist '("\\.howm$" . outline-mode))
 
-;;;;;;;;
-;; intero
-;;;;;;;;
-(require 'intero)
-(setq intero-blacklist '("~/haskellprojects/fay-example" "~/haskellprojects/ghcjs-example"))
-(intero-global-mode 1)
+;; ;;;;;;;;
+;; ;; intero (-> lsp-haskell)
+;; ;;;;;;;;
+;; (require 'intero)
+;; (setq intero-blacklist '("~/haskellprojects/fay-example" "~/haskellprojects/ghcjs-example"))
+;; (intero-global-mode 1)
 
 ;;;;;;;;
 ;; ivy-mode
@@ -725,18 +725,10 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
        (setq js2-basic-offset 2)))
 
 ;;;;;;;;
-;; lsp-java
-;; 補完が効かない場合はM-x lsp-java-update-project-configurationを試すこと
+;; lsp (lsp-mode)
 ;;;;;;;;
-(require 'lsp-java)
-(setq lsp-java-java-path (expand-file-name "~/.jenv/shims/java"))
-(add-hook 'java-mode-hook #'lsp)
-
-;;;;;;;;
-;; lsp-mode
-;;;;;;;;
-(require 'lsp-mode)
-(setq lsp-clients-clangd-executable "/usr/bin/clangd-7")
+(require 'lsp)
+(setq lsp-clients-clangd-executable "/usr/bin/clangd-9")
 (setq lsp-prefer-flymake nil)
 ;; # apt-get install clang-tools-7 # libclang-devのメジャーバージョンと合わせる
 ;; C++ではclang-formatが必要
@@ -758,6 +750,20 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
                          (f-ancestor-of? (f-canonical? it) file-name-canonical)))
            (--max-by (> (length (f-canonical? it))
                         (length other)))))))
+
+;;;;;;;;
+;; lsp-haskell
+;;;;;;;;
+(require 'lsp-haskell)
+(add-hook 'haskell-mode-hook #'lsp)
+
+;;;;;;;;
+;; lsp-java
+;; 補完が効かない場合はM-x lsp-java-update-project-configurationを試すこと
+;;;;;;;;
+(require 'lsp-java)
+(setq lsp-java-java-path (expand-file-name "~/.jenv/shims/java"))
+(add-hook 'java-mode-hook #'lsp)
 
 ;;;;;;;;
 ;; lsp-ui
@@ -1080,7 +1086,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (ac-slime bash-completion browse-kill-ring ccls clang-format coffee-mode company-dict company-lsp csharp-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu intero jedi js2-mode lsp-java lsp-mode lsp-ui lua-mode markdown-mode navi2ch nginx-mode omnisharp plantuml-mode powershell purescript-mode restclient shakespeare-mode slime swiper tidal treemacs typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
+    (ac-slime bash-completion browse-kill-ring ccls clang-format coffee-mode company-dict company-lsp csharp-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu jedi js2-mode lsp-haskell lsp-java lsp-mode lsp-ui lua-mode markdown-mode navi2ch nginx-mode omnisharp plantuml-mode powershell purescript-mode restclient shakespeare-mode slime swiper tidal treemacs typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
