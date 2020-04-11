@@ -906,6 +906,37 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
     (setq inferior-lisp-program "ros -Q run")))
 
 ;;;;;;;;
+;; solarized-theme
+;;;;;;;;
+;; make the fringe stand out from the background
+;(setq solarized-distinct-fringe-background t)
+
+;; Don't change the font for some headings and titles
+(setq solarized-use-variable-pitch nil)
+
+;; make the modeline high contrast
+;(setq solarized-high-contrast-mode-line t)
+
+;; Use less bolding
+;(setq solarized-use-less-bold t)
+
+;; Use more italics
+;(setq solarized-use-more-italic t)
+
+;; Use less colors for indicators such as git:gutter, flycheck and similar
+;(setq solarized-emphasize-indicators nil)
+
+;; Don't change size of org-mode headlines (but keep other size-changes)
+(setq solarized-scale-org-headlines nil)
+
+;; Avoid all font-size changes
+(setq solarized-height-minus-1 1.0)
+(setq solarized-height-plus-1 1.0)
+(setq solarized-height-plus-2 1.0)
+(setq solarized-height-plus-3 1.0)
+(setq solarized-height-plus-4 1.0)
+
+;;;;;;;;
 ;; undo-tree
 ;;;;;;;;
 (require 'undo-tree)
@@ -1027,9 +1058,54 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (require 'grep-edit)
 
 ;;;
+;; customize font
+;;;
+;; Ref: https://www.shimmy1996.com/en/posts/2018-06-24-fun-with-fonts-in-emacs/
+(defvar user--cjk-font "VL Gothic"
+  "Default font for CJK characters")
+
+(defvar user--latin-font "VL Gothic"
+  "Default font for Latin characters")
+
+(defvar user--unicode-font "Noto Sans"
+  "Default font for Unicode characters. including emojis")
+
+(defvar user--standard-fontset
+  (create-fontset-from-fontset-spec standard-fontset-spec)
+  "Standard fontset for user.")
+
+(defun user--set-font ()
+  "Set Unicode, Latin and CJK font for user--standard-fontset."
+  (set-fontset-font user--standard-fontset 'unicode
+                    (font-spec :family user--unicode-font)
+                    nil 'prepend)
+  (set-fontset-font user--standard-fontset 'latin
+                    (font-spec :family user--latin-font)
+                    nil 'prepend)
+  (dolist (charset '(kana han cjk-misc hangul kanbun bopomofo))
+    (set-fontset-font user--standard-fontset charset
+                  (font-spec :family user--cjk-font)
+                  nil 'prepend))
+  (dolist (charset '((#x2018 . #x2019)    ;; Curly single quotes "‘’"
+                     (#x201c . #x201d)))  ;; Curly double quotes "“”"
+    (set-fontset-font user--standard-fontset charset
+                      (font-spec :family user--cjk-font)
+                      nil 'prepend)))
+(user--set-font)
+(add-hook 'before-make-frame-hook #'user--set-font)
+
+;; Ensure user--standard-fontset gets used for new frames.
+(add-to-list 'default-frame-alist (cons 'font user--standard-fontset))
+(add-to-list 'initial-frame-alist (cons 'font user--standard-fontset))
+
+;;;
 ;; customize theme, color
 ;;;
-;;(load-theme 'tango-dark t)
+(if (eq window-system 'x)
+    (if (package-installed-p 'solarized-theme)
+        (load-theme 'solarized-dark t)
+      (load-theme 'tango-dark t)))
+
 ;;;;;;;;
 ;; 色の設定
 ;;;;;;;;
@@ -1055,7 +1131,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (add-hook 'find-file-hooks
           '(lambda () (if font-lock-mode nil (font-lock-mode t))))
 
-(if (not (eq system-type 'cygwin))
+(if (not (or (eq system-type 'cygwin) (eq window-system 'x)))
     (progn (show-paren-mode 1)
            (set-face-attribute 'show-paren-match nil
                                :foreground "brightyellow"
@@ -1082,17 +1158,20 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(browse-url-browser-function (quote browse-url-firefox))
  '(browse-url-netscape-program "netscape")
  '(column-number-mode t)
+ '(custom-safe-themes
+   (quote
+    ("0fffa9669425ff140ff2ae8568c7719705ef33b7a927a0ba7c5e2ffcfac09b75" default)))
  '(line-number-mode t)
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (ac-slime bash-completion browse-kill-ring ccls clang-format coffee-mode company-dict company-lsp csharp-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu jedi js2-mode lsp-haskell lsp-java lsp-mode lsp-ui lua-mode markdown-mode navi2ch nginx-mode omnisharp plantuml-mode powershell purescript-mode restclient shakespeare-mode slime swiper tidal treemacs typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
+    (ac-slime bash-completion browse-kill-ring ccls clang-format coffee-mode company-dict company-lsp csharp-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu jedi js2-mode lsp-haskell lsp-java lsp-mode lsp-ui lua-mode markdown-mode navi2ch nginx-mode omnisharp plantuml-mode powershell purescript-mode restclient shakespeare-mode slime solarized-theme swiper tidal treemacs typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-snippets)))
  '(safe-local-variable-values
    (quote
     ((haskell-process-use-ghci . t)
      (haskell-indent-spaces . 4))))
  '(show-paren-mode t)
- '(tool-bar-mode 0))
+ '(tool-bar-mode nil))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
