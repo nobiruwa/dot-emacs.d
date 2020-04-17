@@ -365,7 +365,7 @@ See `expand-file-name'."
 ;; company-backends
 (require 'company-clang)
 (setq company-clang-executable (executable-find "/usr/bin/clang-9"))
-(setq company-clang--version '(normal . 7.0))
+(setq company-clang--version '(normal . 9.0))
 
 (require 'company-dict)
 (require 'company-lsp)
