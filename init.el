@@ -689,7 +689,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (require 'lsp)
 (setq lsp-clients-clangd-executable "/usr/bin/clangd-9")
 (setq lsp-prefer-flymake nil)
-;; # apt-get install clang-tools-7 # libclang-devのメジャーバージョンと合わせる
+;; # apt-get install clang-tools-9 # libclang-devのメジャーバージョンと合わせる
 ;; C++ではclang-formatが必要
 (add-hook 'c-mode-hook #'lsp)
 (add-hook 'c++-mode-hook #'lsp)
