@@ -354,7 +354,7 @@ See `expand-file-name'."
 ;; clang-format
 ;;;;;;;;
 (require 'clang-format)
-(setq clang-format-executable "/usr/bin/clang-format-7")
+(setq clang-format-executable "/usr/bin/clang-format-9")
 
 ;;;
 ;; company-mode
@@ -364,7 +364,7 @@ See `expand-file-name'."
 
 ;; company-backends
 (require 'company-clang)
-(setq company-clang-executable (executable-find "/usr/bin/clang-7"))
+(setq company-clang-executable (executable-find "/usr/bin/clang-9"))
 (setq company-clang--version '(normal . 7.0))
 
 (require 'company-dict)
@@ -383,7 +383,6 @@ See `expand-file-name'."
         '(company-bbdb
           company-nxml
           company-css
-          company-eclim
           company-semantic
           company-lsp
           company-clang
@@ -391,49 +390,9 @@ See `expand-file-name'."
           company-cmake
           company-capf
           company-files
-          (company-dabbrev-code company-etags company-keywords company-dict)
+          (company-dabbrev-code company-gtags company-etags company-keywords company-dict)
           company-oddmuse
           company-dabbrev)))
-
-;;;
-;; emacs-eclim
-;; auto-completeの後に読み込む
-;;;
-(when (require 'eclim nil 'noerror)
-  (progn
-    ;; シンボリックリンクを開いた場合、名前を解決する
-    (setq-default find-file-visit-truename t)
-    (setq eclim-auto-save t)
-    (setq eclim-executable "~/opt/eclipse/eclim")
-    (global-eclim-mode 1)
-
-    ;;(setq help-at-pt-display-when-idle t)
-    ;;(setq help-at-pt-timer-delay 0.9)
-    ;;(help-at-pt-set-timer)
-
-    ;; configuration for auto-complete
-    (require 'ac-emacs-eclim-source)
-    (ac-emacs-eclim-config)
-    ;; M-TAB での補完に eclim-complete ではなく auto-complete を用いる
-    ;;(define-key eclim-mode-map (kbd "M-TAB") 'auto-complete)
-    (define-key eclim-mode-map (kbd "C-c C-i") 'auto-complete)
-    ;; define eclimd start function
-    (defun eclim-start-eclimd (workspace)
-      (interactive (list (read-directory-name "workspace: "
-                                              "~/workspace/")))
-      (let* ((eclimd-executable (expand-file-name "~/opt/eclipse/eclimd"))
-             (eclimd-workspace-option (mapconcat 'identity (list "-Dosgi.instance.area.default=\"" (expand-file-name workspace) "\"") ""))
-             (command (mapconcat 'identity (list eclimd-executable eclimd-workspace-option "&") " ")))
-        ;; body
-        (if workspace
-            (shell-command command))))
-    ;; define eclimd shutdown function
-    (defun eclim-shutdown-eclimd ()
-      (interactive)
-      (let* ((eclimd-executable (expand-file-name "~/opt/eclipse/eclim"))
-             (command (mapconcat 'identity (list eclimd-executable "-command" "shutdown") " ")))
-        ;; body
-        (shell-command command)))))
 
 ;;;;;;;;
 ;; GCL GNU Common Lisp
@@ -1155,6 +1114,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(blink-cursor-mode nil)
  '(browse-url-browser-function (quote browse-url-firefox))
  '(browse-url-netscape-program "netscape")
  '(column-number-mode t)
