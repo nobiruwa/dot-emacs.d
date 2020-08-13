@@ -851,6 +851,10 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; $ ./configure --prefix=$HOME/opt/roswell
 ;; $ make
 ;; $ make install
+;; after adding $HOME/opt/roswell/bin to PATH
+;; $ ros setup
+;; $ ros install sbcl-bin
+;; $ ros install slime
 ;; https://github.com/roswell/roswell/wiki/Initial-Recommended-Setup#for-emacs
 (let ((slime-helper (expand-file-name "~/.roswell/helper.el")))
   (when (file-exists-p slime-helper)
