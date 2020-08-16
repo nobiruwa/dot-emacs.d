@@ -381,13 +381,16 @@ See `expand-file-name'."
   (global-set-key (kbd "C-M-i") 'company-complete)
   (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)
   (define-key lisp-interaction-mode-map (kbd "C-M-i") 'company-complete)
-
+  ;; デフォルト値を保存copy-treeが再帰的にリストをコピーできる
+  (setq company-backends-default (copy-tree company-backends))
   (setq company-backends
         '(company-bbdb
           company-nxml
           company-css
           company-semantic
-          company-lsp
+          ;; lsp-modeが以下の警告を表示するので、とりあえずコメントアウト
+          ;; `company-lsp` is not supported anymore. Using `company-capf` as the `lsp-completion-provider`.
+          ;; company-lsp
           company-clang
           company-xcode
           company-cmake
