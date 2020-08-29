@@ -734,6 +734,13 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; lsp-ui
 ;;;;;;;;
 (require 'lsp-ui)
+;; C-s/C-rで検索中にlsp-ui-docウィンドウが開き、検索が中断される
+;; トグルをF5にバインドする
+(defun toggle-lsp-ui-doc ()
+  (interactive)
+  (progn (lsp-ui-doc-enable (not lsp-ui-doc-enable))
+         (setq lsp-ui-doc-enable (not lsp-ui-doc-enable))))
+(define-key lsp-mode-map (kbd "<f5>") 'toggle-lsp-ui-doc)
 
 ;;;;;;;;
 ;; navi2ch
