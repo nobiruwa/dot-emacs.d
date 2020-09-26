@@ -1046,6 +1046,15 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (defvar user--unicode-font "Noto Sans"
   "Default font for Unicode characters. including emojis")
 
+;; Notoフォントでベンガル語(charset名はbengali)を表示するとクラッシュする。
+;; バックトレースを見るとlibm17n/libotf0でクラッシュしているようだ。
+;; $ fc-list :lang=bn
+;; を実行してベンガル語をサポートするフォント一覧を出力すると、
+;; Notoフォント以外にFreeSansがある。
+;; ので、FreeSansをフォールバックフォントとして用いる。
+(defvar user--unicode-font-fallback "FreeSans"
+  "Fallback font for Unicode characters.")
+
 (defvar user--standard-fontset
   (create-fontset-from-fontset-spec standard-fontset-spec)
   "Standard fontset for user.")
@@ -1066,6 +1075,11 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
                      (#x201c . #x201d)))  ;; Curly double quotes "“”"
     (set-fontset-font user--standard-fontset charset
                       (font-spec :family user--cjk-font)
+                      nil 'prepend))
+  ;; フォールバックフォントを用いる言語(charsetは C-u C-x = のscriptセクションの名前を用いる)
+  (dolist (charset '(bengali bengali-akruti bengali-cdac))
+    (set-fontset-font user--standard-fontset charset
+                      (font-spec :family user--unicode-font-fallback)
                       nil 'prepend)))
 (user--set-font)
 (add-hook 'before-make-frame-hook #'user--set-font)
