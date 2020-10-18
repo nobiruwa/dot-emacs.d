@@ -10,8 +10,20 @@
 ;;;;;;;;
 ;; load-path
 (setq load-path (append (list "~/.emacs.d/site-lisp") load-path))
-;; *.~ とかのバックアップファイルを作らない
+
+;; バックアップファイル(foo.txt~)
+;; バックアップファイルを作らない
 (setq make-backup-files nil)
+;; 自動保存ファイル(#foo.txt#)
+;; 自動保存ファイルの保存場所を"~/.emacs.d/tmp"に変更する
+(setq auto-save-file-name-transforms '((".*" "~/.emacs.d/tmp/" t)))
+
+;; 自動保存リストファイル(~/.emacs.d/auto-save-list/.saves-xxxx)
+;; 自動保存リストファイルはデフォルトの作るので設定を変更しない
+
+;; ロックファイル(.#foo.txt)
+;; ロックファイルを作らない
+(setq create-lockfiles nil)
 
 ;;;;;;;;
 ;; 初期化
@@ -60,6 +72,7 @@ This requires xclip command."
 
 (global-set-key (kbd "C-c C-y") 'my-xclip-paste-function)
 
+;; emacs-noxでのXアプリケーションのクリップボードの使用
 ;; pasteをセットすると、yank時に同内容のテキストが2つずつ入っているように見える
 ;; pasteはM-x my-xclip-paste-functionかShift-Insertで行えばよいのでnilとする
 ;; 前者はM-x my-p TABで展開できるうちはキーの割り当ては不要だろう
@@ -753,6 +766,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
       (concat "\\("
               (regexp-opt '(".machibbs.com" ".machi.to" ".open2ch.net"))
               "\\)\\'"))
+
 ;;;;;;;;
 ;; omnisharp-mode
 ;;;;;;;;
