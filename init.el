@@ -544,6 +544,14 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; howm
 ;;;;;;;;
+;;;
+;; howmのロード前に書くべきカスタマイズ内容
+;; テンプレートのカスタマイズも合わせてここで指定する
+;;;
+;; 1行目のタイトルヘッダーをorg-modeのExport Settingsに合わせる
+(setq howm-view-title-header "#+TITLE:")
+(setq howm-template-date-header "#+DATE:") ;; 独自の変数
+(setq howm-template (concat howm-view-title-header " %title%cursor\n"  howm-template-date-header " %date\n%file\n\n"))
 ;; ロード
 (require 'howm)
 ;; キーの再割り当て
