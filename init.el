@@ -421,6 +421,20 @@ See `expand-file-name'."
 ;;;;;;;;
 (setq inferior-lisp-program "sbcl")
 
+;;;;;;;;
+;; counsel
+;;;;;;;;
+(require 'counsel)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> o") 'counsel-describe-symbol)
+(global-set-key (kbd "<f1> l") 'counsel-find-library)
+(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+(define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+
 ;;;
 ;; emacs-jedi
 ;; Type:
@@ -936,6 +950,16 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (setq solarized-height-plus-2 1.0)
 (setq solarized-height-plus-3 1.0)
 (setq solarized-height-plus-4 1.0)
+
+;;;;;;;;
+;; swiper
+;;;;;;;;
+(require 'swiper)
+;; swiper use M-s as the prefix.
+(global-set-key (kbd "M-s M-s") 'swiper)
+(global-set-key (kbd "C-s") 'swiper-isearch)
+(global-set-key (kbd "C-r") 'swiper-isearch-backward)
+(global-set-key (kbd "M-s s") 'swiper-thing-at-point)
 
 ;;;;;;;;
 ;; undo-tree
