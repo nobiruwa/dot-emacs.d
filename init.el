@@ -206,7 +206,10 @@ This requires xclip command."
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
+;; Emacs 27から、パッケージはinit.elのロードよりも前にロードされるようになり、
+;; package-initializeを呼ぶ必要はなくなりました。
+(when (< emacs-major-version 27)
+  (package-initialize))
 
 ;;;;;;;;
 ;; shell-mode
@@ -451,6 +454,20 @@ See `expand-file-name'."
 ;;;;;;;;
 (setq inferior-lisp-program "sbcl")
 
+;;;;;;;;
+;; counsel
+;;;;;;;;
+(require 'counsel)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> o") 'counsel-describe-symbol)
+(global-set-key (kbd "<f1> l") 'counsel-find-library)
+(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+(define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+
 ;;;
 ;; emacs-jedi
 ;; Type:
@@ -577,6 +594,14 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; howm
 ;;;;;;;;
+;;;
+;; howmのロード前に書くべきカスタマイズ内容
+;; テンプレートのカスタマイズも合わせてここで指定する
+;;;
+;; 1行目のタイトルヘッダーをorg-modeのExport Settingsに合わせる
+(setq howm-view-title-header "#+TITLE:")
+(setq howm-template-date-header "#+DATE:") ;; 独自の変数
+(setq howm-template (concat howm-view-title-header " %title%cursor\n"  howm-template-date-header " %date\n%file\n\n"))
 ;; ロード
 (require 'howm)
 ;; キーの再割り当て
@@ -928,6 +953,16 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (setq solarized-height-plus-4 1.0)
 
 ;;;;;;;;
+;; swiper
+;;;;;;;;
+(require 'swiper)
+;; swiper use M-s as the prefix.
+(global-set-key (kbd "M-s M-s") 'swiper)
+(global-set-key (kbd "C-s") 'swiper-isearch)
+(global-set-key (kbd "C-r") 'swiper-isearch-backward)
+(global-set-key (kbd "M-s s") 'swiper-thing-at-point)
+
+;;;;;;;;
 ;; undo-tree
 ;;;;;;;;
 (require 'undo-tree)
@@ -1161,21 +1196,18 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(blink-cursor-mode nil)
- '(browse-url-browser-function (quote browse-url-firefox))
+ '(browse-url-browser-function 'browse-url-firefox)
  '(browse-url-netscape-program "netscape")
  '(column-number-mode t)
  '(custom-safe-themes
-   (quote
-    ("0fffa9669425ff140ff2ae8568c7719705ef33b7a927a0ba7c5e2ffcfac09b75" default)))
+   '("0fffa9669425ff140ff2ae8568c7719705ef33b7a927a0ba7c5e2ffcfac09b75" default))
  '(line-number-mode t)
  '(menu-bar-mode nil)
  '(package-selected-packages
-   (quote
-    (ac-slime bash-completion browse-kill-ring ccls clang-format coffee-mode company-dict company-lsp csharp-mode ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu jedi js2-mode lsp-haskell lsp-java lsp-mode lsp-ui lua-mode markdown-mode navi2ch nginx-mode omnisharp plantuml-mode powershell purescript-mode restclient shakespeare-mode slime solarized-theme swiper tidal treemacs typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-classic-snippets yasnippet-snippets)))
+   '(ac-slime bash-completion browse-kill-ring ccls clang-format coffee-mode company-dict company-lsp counsel ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu jedi js2-mode lsp-haskell lsp-java lsp-mode lsp-ui lua-mode magit markdown-mode navi2ch nginx-mode plantuml-mode powershell purescript-mode restclient shakespeare-mode slime solarized-theme swiper tidal treemacs typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-classic-snippets yasnippet-snippets))
  '(safe-local-variable-values
-   (quote
-    ((haskell-process-use-ghci . t)
-     (haskell-indent-spaces . 4))))
+   '((haskell-process-use-ghci . t)
+     (haskell-indent-spaces . 4)))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 
