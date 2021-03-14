@@ -32,8 +32,18 @@
 (setq inhibit-startup-message t)
 ;; emacsclient
 (server-start)
-;; デバッグをする場合はt
+;; デバッグをする場合はnon-nil
 (setq debug-on-error nil)
+;; 行数を表示する場合はnon-nil
+(setq line-number-mode t)
+;; メニューバーを表示する場合はnon-nil
+(setq menu-bar-mode nil)
+;; 対となる括弧を強調表示する場合はnon-nil
+(setq show-paren-mode t)
+;; ツールバーを表示する場合はnon-nil
+(setq tool-bar-mode nil)
+;; ベル音を画面のフラッシュに変更する場合はnon-nil
+(setq visible-bell t)
 ;; カーソルを点灯したままにする
 (setq visible-cursor nil)
 
@@ -102,6 +112,7 @@ This requires xclip command."
 ;; 日本語 grep
 (if (file-exists-p "/usr/bin/lgrep")
     (setq grep-command "lgrep -n "))
+
 ;;;;;;;;
 ;;settings for utf-8
 ;;;;;;;;
@@ -220,11 +231,14 @@ This requires xclip command."
 ;; solarized-darkと組み合わせた時のプロンプトの色
 (when (eq window-system 'x)
   (set-face-foreground 'comint-highlight-prompt "#268bd2"))
+
 ;; shell-modeの拡張
 ;; lsなどの色の設定
 ;; (autoload 'ansi-color-for-comint-mode-on "ansi-color"
 ;;  "Set `ansi-color-for-comint-mode' to t." t)
 ;;(setq ansi-color-names-vector ["black" "red3" "green3" "yellow3" "navy" "magenta3" "cyan3" "white"])
+
+;; company-modeのパス補完動作のカスタマイズ
 (defun first-to-last (suffix list)
   "先頭の要素がSUFFIXを含む場合、LISTの先頭要素を末尾に移動した新しいリストを返します。"
   (if (and list (string-suffix-p suffix (nth 0 list)))
@@ -1201,15 +1215,11 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(column-number-mode t)
  '(custom-safe-themes
    '("0fffa9669425ff140ff2ae8568c7719705ef33b7a927a0ba7c5e2ffcfac09b75" default))
- '(line-number-mode t)
- '(menu-bar-mode nil)
  '(package-selected-packages
    '(ac-slime bash-completion browse-kill-ring ccls clang-format coffee-mode company-dict company-lsp counsel ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu jedi js2-mode lsp-haskell lsp-java lsp-mode lsp-ui lua-mode magit markdown-mode navi2ch nginx-mode plantuml-mode powershell purescript-mode restclient shakespeare-mode slime solarized-theme swiper tidal treemacs typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-classic-snippets yasnippet-snippets))
  '(safe-local-variable-values
    '((haskell-process-use-ghci . t)
-     (haskell-indent-spaces . 4)))
- '(show-paren-mode t)
- '(tool-bar-mode nil))
+     (haskell-indent-spaces . 4))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
