@@ -282,6 +282,39 @@ See `expand-file-name'."
   (if arg
       (insert (expand-file-name filename))
     (insert filename)))
+
+;; C-c C-c 現バッファの内容を保存してバッファを消す
+;; Ref: http://howm.sourceforge.jp/cgi-bin/hiki/hiki.cgi?SaveAndKillBuffer
+(defun my-save-and-kill-buffer ()
+  (interactive)
+  (save-buffer)
+  (kill-buffer nil))
+
+;; リージョンの単語をソートする
+(defvar separators-per-mode
+  '((emacs-lisp-mode " +" " ")
+    (haskell-mode ", *" ", ")
+    (otherwise ", *" ", ")))
+
+(defun my-sort-words-in-region (start end)
+  "sort words separated white spaces in the current region."
+  (interactive "r")
+  (let* ((separators (if (assoc major-mode separators-per-mode)
+                        (assoc major-mode separators-per-mode)
+                       (assoc 'otherwise separators-per-mode)))
+         (sep-regexp (cadr separators))
+         (sep-fixed (caddr separators)))
+    (replace-string
+     (buffer-substring start end)
+     (my-sort-words-in-line (buffer-substring start end) sep-regexp sep-fixed)
+     nil start end)))
+
+;; 文字列内の単語をソートする
+(defun my-sort-words-in-line (text sep-regexp sep-fixed)
+  "sort words separated white spaces in a line."
+  (mapconcat 'identity (sort
+   (split-string text sep-regexp) 'string<) sep-fixed))
+
 ;;;
 ;; previous-lineのオーバーライド
 ;;;
@@ -620,38 +653,6 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ; (add-hook 'howm-view-summary-mode-hook
 ;     (lambda ()
 ;             (jit-lock-register 'howm-add-day-of-week-overlay-region)))
-
-;; C-c C-c 現バッファの内容を保存してバッファを消す
-;; Ref: http://howm.sourceforge.jp/cgi-bin/hiki/hiki.cgi?SaveAndKillBuffer
-(defun my-save-and-kill-buffer ()
-  (interactive)
-  (save-buffer)
-  (kill-buffer nil))
-
-;; リージョンの単語をソートする
-(defvar separators-per-mode
-  '((emacs-lisp-mode " +" " ")
-    (haskell-mode ", *" ", ")
-    (otherwise ", *" ", ")))
-
-(defun my-sort-words-in-region (start end)
-  "sort words separated white spaces in the current region."
-  (interactive "r")
-  (let* ((separators (if (assoc major-mode separators-per-mode)
-                        (assoc major-mode separators-per-mode)
-                       (assoc 'otherwise separators-per-mode)))
-         (sep-regexp (cadr separators))
-         (sep-fixed (caddr separators)))
-    (replace-string
-     (buffer-substring start end)
-     (my-sort-words-in-line (buffer-substring start end) sep-regexp sep-fixed)
-     nil start end)))
-
-;; 文字列内の単語をソートする
-(defun my-sort-words-in-line (text sep-regexp sep-fixed)
-  "sort words separated white spaces in a line."
-  (mapconcat 'identity (sort
-   (split-string text sep-regexp) 'string<) sep-fixed))
 
 ;; howm-mode-hook
 (add-hook 'howm-mode-hook
