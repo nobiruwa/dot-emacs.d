@@ -34,6 +34,10 @@
 (server-start)
 ;; デバッグをする場合はnon-nil
 (setq debug-on-error nil)
+;; カーソルのブリンクを有効にする場合はnon-nil
+(setq blink-cursor-mode nil)
+;; カーソル位置の桁を表示する場合はnon-nil
+(setq column-number-mode t)
 ;; 行数を表示する場合はnon-nil
 (setq line-number-mode t)
 ;; メニューバーを表示する場合はnon-nil
@@ -1209,10 +1213,8 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(blink-cursor-mode nil)
  '(browse-url-browser-function 'browse-url-firefox)
  '(browse-url-netscape-program "netscape")
- '(column-number-mode t)
  '(custom-safe-themes
    '("0fffa9669425ff140ff2ae8568c7719705ef33b7a927a0ba7c5e2ffcfac09b75" default))
  '(package-selected-packages
