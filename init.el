@@ -44,10 +44,12 @@
 (setq inhibit-startup-message t)
 ;; 行数を表示する場合はnon-nil
 (setq line-number-mode t)
+;; ベル音が不要な場合はnon-nilな関数かシンボル
+(setq ring-bell-function 'ignore)
 ;; 対となる括弧を強調表示する場合はnon-nil
 (setq show-paren-mode t)
 ;; ベル音を画面のフラッシュに変更する場合はnon-nil
-(setq visible-bell t)
+(setq visible-bell nil)
 ;; カーソルを点灯したままにする
 (setq visible-cursor nil)
 
