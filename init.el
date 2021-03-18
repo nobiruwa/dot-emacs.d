@@ -28,24 +28,24 @@
 ;;;;;;;;
 ;; 初期化
 ;;;;;;;;
-;; 起動画面がいつまでも消えてくれないのではなから使わない
-(setq inhibit-startup-message t)
+;; メニューバーを表示する場合はnon-nil
+(menu-bar-mode -1)
 ;; emacsclient
 (server-start)
-;; デバッグをする場合はnon-nil
-(setq debug-on-error nil)
+;; ツールバーを表示する場合はnon-nil
+(tool-bar-mode -1)
 ;; カーソルのブリンクを有効にする場合はnon-nil
 (setq blink-cursor-mode nil)
 ;; カーソル位置の桁を表示する場合はnon-nil
 (setq column-number-mode t)
+;; デバッグをする場合はnon-nil
+(setq debug-on-error nil)
+;; 起動画面がいつまでも消えてくれないのではなから使わない
+(setq inhibit-startup-message t)
 ;; 行数を表示する場合はnon-nil
 (setq line-number-mode t)
-;; メニューバーを表示する場合はnon-nil
-(setq menu-bar-mode nil)
 ;; 対となる括弧を強調表示する場合はnon-nil
 (setq show-paren-mode t)
-;; ツールバーを表示する場合はnon-nil
-(setq tool-bar-mode nil)
 ;; ベル音を画面のフラッシュに変更する場合はnon-nil
 (setq visible-bell t)
 ;; カーソルを点灯したままにする
@@ -459,7 +459,6 @@ See `expand-file-name'."
           ;; `company-lsp` is not supported anymore. Using `company-capf` as the `lsp-completion-provider`.
           ;; company-lsp
           company-clang
-          company-xcode
           company-cmake
           company-capf
           company-files
