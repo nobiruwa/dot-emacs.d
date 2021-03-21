@@ -758,22 +758,6 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (add-hook 'c-mode-hook #'lsp)
 (add-hook 'c++-mode-hook #'lsp)
 
-;; シンボリックリンク配下のワークスペースでは上手く動かない
-;; it -> (f-canonical it) とする
-(defun lsp-find-session-folder (session file-name)
-  "Look in the current SESSION for folder containing FILE-NAME."
-  (labels ((f-canonical? (file)
-                         (if (stringp file)
-                             (f-canonical file)
-                           nil)))
-    (let ((file-name-canonical (f-canonical file-name)))
-      (->> session
-           (lsp-session-folders)
-           (--filter (or (f-same? (f-canonical? it) file-name-canonical)
-                         (f-ancestor-of? (f-canonical? it) file-name-canonical)))
-           (--max-by (> (length (f-canonical? it))
-                        (length other)))))))
-
 ;;;;;;;;
 ;; lsp-haskell
 ;;;;;;;;
