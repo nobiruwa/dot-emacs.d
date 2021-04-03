@@ -106,7 +106,7 @@ This requires xclip command."
 ;; tab-stop-listを直接編集してもOK
 (setq-default tab-width 4)
 (setq tab-stop-list
-'(4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76))
+      '(4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76))
 ;; 字下げをタブではなく空白にする
 (setq-default indent-tabs-mode nil)
 
@@ -394,6 +394,13 @@ See `expand-file-name'."
 ;;           'bash-completion-dynamic-complete)
 ;; (add-hook 'shell-command-complete-functions
 ;;           'bash-completion-dynamic-complete)
+
+;;;;;;;;
+;; cargo-minor-mode
+;;;;;;;;
+(require 'rust-mode)
+
+(add-hook 'rust-mode-hook 'cargo-minor-mode)
 
 ;;;;;;;;
 ;; ccls
@@ -867,6 +874,20 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
             (setq plantuml-jar-path (expand-file-name "~/opt/plantuml/plantuml.jar"))))
 
 ;;;;;;;;
+;; rust-mode
+;;;;;;;;
+(require 'rust-mode)
+
+(add-hook 'rust-mode-hook
+          (lambda ()
+            (setq indent-tabs-mode nil)
+            (lsp)))
+
+;; Formatting is bound to C-c C-f.
+;; The folowing enables automatic formatting on save.
+(setq rust-format-on-save t)
+
+;;;;;;;;
 ;; skk
 ;;;;;;;;
 ;; skk-modeが有効になると、C-jがskk-kakutei-keyにバインドされる
@@ -1203,7 +1224,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(custom-safe-themes
    '("0fffa9669425ff140ff2ae8568c7719705ef33b7a927a0ba7c5e2ffcfac09b75" default))
  '(package-selected-packages
-   '(ac-slime bash-completion browse-kill-ring ccls clang-format coffee-mode company-dict company-lsp counsel ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu jedi js2-mode lsp-haskell lsp-java lsp-mode lsp-ui lua-mode magit markdown-mode navi2ch nginx-mode plantuml-mode powershell purescript-mode restclient shakespeare-mode slime solarized-theme swiper tidal treemacs typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-classic-snippets yasnippet-snippets))
+   '(ac-slime bash-completion browse-kill-ring cargo ccls clang-format coffee-mode company-dict company-lsp counsel ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu jedi js2-mode lsp-haskell lsp-java lsp-mode lsp-ui lua-mode magit markdown-mode navi2ch nginx-mode plantuml-mode powershell purescript-mode restclient rust-mode shakespeare-mode slime solarized-theme swiper tidal treemacs typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-classic-snippets yasnippet-snippets))
  '(safe-local-variable-values
    '((haskell-process-use-ghci . t)
      (haskell-indent-spaces . 4))))
