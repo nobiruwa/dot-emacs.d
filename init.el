@@ -1140,12 +1140,19 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
   ;; 記号にはデフォルトのフォントではなく指定のフォントを使いたい
   (setq use-default-font-for-symbols nil)
   (create-fontset-from-ascii-font user--cjk-font nil (replace-regexp-in-string "fontset-" "" user--standard-fontset))
+  ;; unicodeに対してuser--cjk-fontがグリフを持っていればそれを使い、
+  ;; 持っていない場合にはuser--unicode-fontで補完する
+  (set-fontset-font user--standard-fontset 'unicode
+                    (font-spec :family user--cjk-font)
+                    nil)
   (set-fontset-font user--standard-fontset 'unicode
                     (font-spec :family user--unicode-font)
-                    nil 'prepend)
+                    nil 'append)
+  ;; latinに対してuser--latin-fontを使う
   (set-fontset-font user--standard-fontset 'latin
                     (font-spec :family user--latin-font)
                     nil 'prepend)
+  ;; CJKに対してuser--cjk-fontを使う
   (dolist (charset '(kana han cjk-misc hangul kanbun bopomofo))
     (set-fontset-font user--standard-fontset charset
                   (font-spec :family user--cjk-font)
