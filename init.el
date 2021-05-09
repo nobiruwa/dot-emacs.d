@@ -1111,6 +1111,8 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; customize font
 ;;;
 ;; Ref: https://www.shimmy1996.com/en/posts/2018-06-24-fun-with-fonts-in-emacs/
+;; Ref: https://qiita.com/melito/items/238bdf72237290bc6e42
+;; Ref: http://misohena.jp/blog/2017-09-26-symbol-font-settings-for-emacs25.html
 (defvar user--cjk-font "VL Gothic"
   "Default font for CJK characters")
 
