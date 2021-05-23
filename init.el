@@ -1180,12 +1180,12 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
                       (font-spec :family user--unicode-font-fallback)
                       nil 'prepend)))
 
-;; create fontset-user
-(user--set-font)
-
-;; Ensure user--standard-fontset gets used for new frames.
-(add-to-list 'default-frame-alist `(font . ,user--standard-fontset))
-(add-to-list 'initial-frame-alist `(font . ,user--standard-fontset))
+(when window-system
+  ;; create fontset-user
+  (user--set-font)
+  ;; Ensure user--standard-fontset gets used for new frames.
+  (add-to-list 'default-frame-alist `(font . ,user--standard-fontset))
+  (add-to-list 'initial-frame-alist `(font . ,user--standard-fontset)))
 
 ;;;
 ;; customize theme, color
