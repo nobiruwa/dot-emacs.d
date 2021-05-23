@@ -1036,6 +1036,11 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
                              (setq web-mode-auto-close-style 1))))
 
 ;;;;;;;;
+;; wgrep
+;;;;;;;;
+(require 'wgrep nil t)
+
+;;;;;;;;
 ;; yasnippet
 ;;;;;;;;
 (require 'yasnippet)
@@ -1105,10 +1110,10 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;(autoload 'moccur-edit "moccur-edit" "edit moccur buffer" nil t)
 (require 'moccur-edit)
 
-;; grep-edit
+;; grep-edit -> wdiredに置き換えました。
 ;; grep の結果を編集し，その結果をもとにファイルを変更する．
 ;(autoload 'grep-edit "edit grep result" nil t)
-(require 'grep-edit)
+;; (require 'grep-edit)
 
 ;;;
 ;; customize font
@@ -1244,7 +1249,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(custom-safe-themes
    '("0fffa9669425ff140ff2ae8568c7719705ef33b7a927a0ba7c5e2ffcfac09b75" default))
  '(package-selected-packages
-   '(ac-slime bash-completion browse-kill-ring cargo ccls clang-format coffee-mode company-dict company-lsp counsel ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu jedi js2-mode lsp-haskell lsp-java lsp-mode lsp-ui lua-mode magit markdown-mode navi2ch nginx-mode plantuml-mode powershell purescript-mode restclient rust-mode shakespeare-mode slime solarized-theme swiper tidal treemacs typescript-mode undo-tree vue-mode web-mode xclip yaml-mode yasnippet yasnippet-classic-snippets yasnippet-snippets))
+   '(ac-slime bash-completion browse-kill-ring cargo ccls clang-format coffee-mode company-dict company-lsp counsel ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu jedi js2-mode lsp-haskell lsp-java lsp-mode lsp-ui lua-mode magit markdown-mode navi2ch nginx-mode plantuml-mode powershell purescript-mode restclient rust-mode shakespeare-mode slime solarized-theme swiper tidal treemacs typescript-mode undo-tree vue-mode web-mode wgrep xclip yaml-mode yasnippet yasnippet-classic-snippets yasnippet-snippets))
  '(safe-local-variable-values
    '((haskell-process-use-ghci . t)
      (haskell-indent-spaces . 4))))
