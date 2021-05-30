@@ -1110,7 +1110,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;(autoload 'moccur-edit "moccur-edit" "edit moccur buffer" nil t)
 (require 'moccur-edit)
 
-;; grep-edit -> wdiredに置き換えました。
+;; grep-edit -> wgrepに置き換えました。
 ;; grep の結果を編集し，その結果をもとにファイルを変更する．
 ;(autoload 'grep-edit "edit grep result" nil t)
 ;; (require 'grep-edit)
