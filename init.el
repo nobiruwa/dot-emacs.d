@@ -229,6 +229,7 @@ This requires xclip command."
   (package-initialize))
 ;; package-selected-packagesに存在するパッケージでインストールしていないパッケージがあればインストールする関数です。
 (defun my-install-package-if-not-installed ()
+  (interactive)
   "install packages listed in package-selected-packages if they have not been installed yet."
     (when (cl-find-if-not #'package-installed-p package-selected-packages)
   (package-refresh-contents)
