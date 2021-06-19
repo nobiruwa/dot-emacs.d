@@ -32,6 +32,8 @@
 (menu-bar-mode -1)
 ;; emacsclient
 (server-start)
+;; 対となる括弧を強調表示する場合はnon-nil
+(show-paren-mode 1)
 ;; ツールバーを表示する場合はnon-nil
 (tool-bar-mode -1)
 ;; カーソルのブリンクを有効にする場合はnon-nil
@@ -46,8 +48,6 @@
 (setq line-number-mode t)
 ;; ベル音が不要な場合はnon-nilな関数かシンボル
 (setq ring-bell-function 'ignore)
-;; 対となる括弧を強調表示する場合はnon-nil
-(setq show-paren-mode t)
 ;; ベル音を画面のフラッシュに変更する場合はnon-nil
 (setq visible-bell nil)
 ;; カーソルを点灯したままにする
@@ -227,6 +227,12 @@ This requires xclip command."
 ;; package-initializeを呼ぶ必要はなくなりました。
 (when (< emacs-major-version 27)
   (package-initialize))
+;; package-selected-packagesに存在するパッケージでインストールしていないパッケージがあればインストールする関数です。
+(defun my-install-package-if-not-installed ()
+  "install packages listed in package-selected-packages if they have not been installed yet."
+    (when (cl-find-if-not #'package-installed-p package-selected-packages)
+  (package-refresh-contents)
+  (mapc #'package-install package-selected-packages)))
 
 ;;;;;;;;
 ;; shell-mode
