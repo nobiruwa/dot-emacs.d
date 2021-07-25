@@ -501,44 +501,44 @@ See `expand-file-name'."
 (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
 
-;;;
-;; emacs-jedi
-;; Type:
-;;     M-x package-install RET jedi RET
-;;     M-x jedi:install-server RET
-;;;
-(require 'python-environment)
-(require 'jedi)
+;; ;;;
+;; ;; emacs-jedi (-> lsp-pyright)
+;; ;; Type:
+;; ;;     M-x package-install RET jedi RET
+;; ;;     M-x jedi:install-server RET
+;; ;;;
+;; (require 'python-environment)
+;; (require 'jedi)
 
-(setq jedi:environment-virtualenv
-      (append python-environment-virtualenv
-              '("--python" "/usr/bin/python3")))
+;; (setq jedi:environment-virtualenv
+;;       (append python-environment-virtualenv
+;;               '("--python" "/usr/bin/python3")))
 
-(defun jedi:install-server2 ()
-  (interactive)
-  (let ((python-environment-virtualenv (list "virtualenv" "--system-site-packages" "--quiet" "--python" "/usr/bin/python2.7"))
-        (jedi:environment-virtualenv (list "virtualenv" "--system-site-packages" "--python" "/usr/bin/python2.7"))
-        (jedi:environment-root "python2.7"))
-    (jedi:install-server)))
-(defun jedi:start-dedicated-server2 ()
-  (interactive)
-  (let* ((cmds '("~/.emacs.d/.python-environments/python2.7/bin/jediepcserver"))
-        (args '("--sys-path" "/usr/lib/python2.7/dist-packages")))
-    (when cmds (set (make-local-variable 'jedi:server-command) cmds))
-    (when args (set (make-local-variable 'jedi:server-args) args))
-    (setq jedi:epc nil)
-    (jedi:start-server)))
-;;(setq jedi:key-complete (kbd "<M-tab>"))
-(setq jedi:key-complete (kbd "C-c C-i"))
-(setq jedi:key-goto-definition (kbd "C-c ."))
-(setq jedi:key-show-doc (kbd "C-c d"))
-(setq jedi:key-related-names (kbd "C-c r"))
-(setq jedi:goto-definition-pop-marker (kbd "C-c ,"))
-(setq jedi:setup-keys t)
-(setq jedi:get-in-function-call-delay 200)
-(setq jedi:complete-on-dot t)
-(autoload 'jedi:setup "jedi" nil t)
-(add-hook 'python-mode-hook 'jedi:setup)
+;; (defun jedi:install-server2 ()
+;;   (interactive)
+;;   (let ((python-environment-virtualenv (list "virtualenv" "--system-site-packages" "--quiet" "--python" "/usr/bin/python2.7"))
+;;         (jedi:environment-virtualenv (list "virtualenv" "--system-site-packages" "--python" "/usr/bin/python2.7"))
+;;         (jedi:environment-root "python2.7"))
+;;     (jedi:install-server)))
+;; (defun jedi:start-dedicated-server2 ()
+;;   (interactive)
+;;   (let* ((cmds '("~/.emacs.d/.python-environments/python2.7/bin/jediepcserver"))
+;;         (args '("--sys-path" "/usr/lib/python2.7/dist-packages")))
+;;     (when cmds (set (make-local-variable 'jedi:server-command) cmds))
+;;     (when args (set (make-local-variable 'jedi:server-args) args))
+;;     (setq jedi:epc nil)
+;;     (jedi:start-server)))
+;; ;;(setq jedi:key-complete (kbd "<M-tab>"))
+;; (setq jedi:key-complete (kbd "C-c C-i"))
+;; (setq jedi:key-goto-definition (kbd "C-c ."))
+;; (setq jedi:key-show-doc (kbd "C-c d"))
+;; (setq jedi:key-related-names (kbd "C-c r"))
+;; (setq jedi:goto-definition-pop-marker (kbd "C-c ,"))
+;; (setq jedi:setup-keys t)
+;; (setq jedi:get-in-function-call-delay 200)
+;; (setq jedi:complete-on-dot t)
+;; (autoload 'jedi:setup "jedi" nil t)
+;; (add-hook 'python-mode-hook 'jedi:setup)
 
 ;;;;;;;;
 ;;  emmet-mode
@@ -788,6 +788,19 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (require 'lsp-java)
 (setq lsp-java-java-path (expand-file-name "~/.jenv/shims/java"))
 (add-hook 'java-mode-hook #'lsp)
+
+;;;;;;;;
+;; lsp-pyright
+;;;;;;;;
+(require 'lsp-pyright)
+(add-hook 'python-mode-hook #'lsp)
+
+;; ;;;;;;;;
+;; ;; lsp-python-ms (-> lsp-pyright)
+;; ;;;;;;;;
+;; (require 'lsp-python-ms)
+;; (setq lsp-python-ms-auto-install-server t)
+;; (add-hook 'python-mode-hook #'lsp) ; or lsp-deferred
 
 ;;;;;;;;
 ;; lsp-ui
@@ -1256,7 +1269,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
  '(custom-safe-themes
    '("0fffa9669425ff140ff2ae8568c7719705ef33b7a927a0ba7c5e2ffcfac09b75" default))
  '(package-selected-packages
-   '(ac-slime bash-completion browse-kill-ring cargo ccls clang-format coffee-mode company-dict company-lsp counsel ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu jedi js2-mode lsp-haskell lsp-java lsp-mode lsp-ui lua-mode magit markdown-mode navi2ch nginx-mode plantuml-mode powershell purescript-mode restclient rust-mode shakespeare-mode slime solarized-theme swiper tidal treemacs typescript-mode undo-tree vue-mode web-mode wgrep xclip yaml-mode yasnippet yasnippet-classic-snippets yasnippet-snippets))
+   '(ac-slime bash-completion browse-kill-ring cargo ccls clang-format coffee-mode company-dict company-lsp counsel ddskk dockerfile-mode elm-mode elpy emmet-mode f flycheck flycheck-pyflakes flymake god-mode gradle-mode graphviz-dot-mode groovy-mode haskell-mode howm idomenu js2-mode lsp-haskell lsp-java lsp-mode lsp-pyright lsp-ui lua-mode magit markdown-mode navi2ch nginx-mode plantuml-mode powershell purescript-mode restclient rust-mode shakespeare-mode slime solarized-theme swiper tidal treemacs typescript-mode undo-tree vue-mode web-mode wgrep xclip yaml-mode yasnippet yasnippet-classic-snippets yasnippet-snippets))
  '(safe-local-variable-values
    '((haskell-process-use-ghci . t)
      (haskell-indent-spaces . 4))))
