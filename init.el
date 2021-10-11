@@ -1141,6 +1141,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; Ref: https://www.shimmy1996.com/en/posts/2018-06-24-fun-with-fonts-in-emacs/
 ;; Ref: https://qiita.com/melito/items/238bdf72237290bc6e42
 ;; Ref: http://misohena.jp/blog/2017-09-26-symbol-font-settings-for-emacs25.html
+;; Ref: https://www.reddit.com/r/emacs/comments/ggd90c/color_emoji_in_emacs_27/
 (defvar user--cjk-font "VL Gothic"
   "Default font for CJK characters")
 
@@ -1152,6 +1153,9 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 
 (defvar user--unicode-font "Noto Sans Mono CJK JP"
   "Default font for Unicode characters. including emojis")
+
+(defvar user--unicode-emoji-font "Noto Color Emoji"
+  "Default font for Unicode emoji characters.")
 
 ;; Notoフォントでベンガル語(charset名はbengali)を表示するとクラッシュする。
 ;; バックトレースを見るとlibm17n/libotf0でクラッシュしているようだ。
@@ -1187,6 +1191,8 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
     (set-fontset-font user--standard-fontset charset
                   (font-spec :family user--cjk-font)
                   nil 'prepend))
+  ;; symbolに対してuser--unicode-emoji-fontを使う
+  (set-fontset-font t 'symbol user--unicode-emoji-font nil 'append)
   ;; TODO 日本語フォントではU+2018とU+2019は全角幅だがWeb上の英文ではアポストロフィに使われていて
   ;; 見栄えが悪い。現状は全角で表示し必要に応じてU+0027に置換する。よい方法はないものか。
   (dolist (charset '((#x2018 . #x2019)    ;; Curly single quotes "‘’"
