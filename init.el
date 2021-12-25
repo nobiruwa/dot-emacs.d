@@ -160,6 +160,17 @@ This requires xclip command."
 ;;             (setq c-basic-offset 2)))
 
 ;;;;;;;;
+;; cedet, ede, semantic, etc.
+;; Ref: Emacs Part 31
+;; URL: http://pc12.2ch.net/test/read.cgi/unix/1251665639/312
+;;;;;;;;
+;; DBファイルを一ヶ所に集約
+(setq semanticdb-default-save-directory "~/.emacs.d/semantic")
+;; disable semantic-mode and global-*-mode in CEDET
+;; CEDET conflicts js2-mode, python-mode
+(semantic-mode -1)
+
+;;;;;;;;
 ;; ediff
 ;;;;;;;;
 (require 'ediff)
@@ -360,53 +371,58 @@ See `expand-file-name'."
     (line-move (- arg)))
   nil)
 
+;;;;;;;;
+;; reopen-file
+;;;;;;;;
+;; http://namazu.org/~satoru/diary/?200203c&to=200203272#200203272
+;; 編集中のファイルを開き直す
+;; - yes/no の確認が不要;;   - revert-buffer は yes/no の確認がうるさい
+;; - 「しまった! 」というときにアンドゥで元のバッファの状態に戻れる
+;;   - find-alternate-file は開き直したら元のバッファの状態に戻れない
+;;
+(defun reopen-file ()
+  "Reopen file without confirm yes/no."
+  (interactive)
+  (let ((file-name (buffer-file-name))
+        (old-supersession-threat
+         (symbol-function 'ask-user-about-supersession-threat))
+        (point (point)))
+    (when file-name
+      (fset 'ask-user-about-supersession-threat (lambda (fn)))
+      (unwind-protect
+          (progn
+            (erase-buffer)
+            (insert-file file-name)
+            (set-visited-file-modtime)
+            (goto-char point))
+        (fset 'ask-user-about-supersession-threat
+              old-supersession-threat)))))
+;; reopen-fileをC-x C-rにバインド
+(define-key ctl-x-map "\C-r"  'reopen-file)
+
+;;;
+;; requireの代わりに使います。
+;;;
+(setq require-if-not-loaded-packages '())
+(defun require-if-not (feature &optional else-body)
+  "パッケージをロードします。パッケージのロードに失敗した場合はELSE-BODYを実行します。ロードに失敗した場合FEATUREがrequire-if-not-loaded-packages変数に追加されます。パッケージをロードした場合はtを、ロードに失敗した場合にはnilを返します。"
+  (if (require feature nil t)
+      (progn
+        (message "require-if-not: [%s] is loaded." feature)
+        t)
+    (progn
+      (add-to-list 'require-if-not-loaded-packages feature)
+      (if (and (boundp 'else-body) (functionp 'else-body))
+          (funcall else-body)
+        (message "require-if-not: [%s] is not loaded." feature))
+      nil)))
+
 ;;;;;;;;;;;;; 以下、ELispファイルを追加する必要があるものを設定 ;;;;;;
 ;;;;;;;;;;;;; アルファベット順になるよう努力 ;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ;;;
-;; ;; auto-complete
-;; ;; URL: http://cx4a.org/software/auto-complete/
-;; ;;;
-;; (require 'auto-complete-config)
-;; (add-to-list 'ac-dictionary-directories "~/repo/nobiruwa.github/dot-emacs.d.git/ac-dict")
-;; (ac-config-default)
-
-;; ;; auto-complete-modeが有効なバッファでのキーバインド
-;; ;;(define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
-;; (define-key ac-mode-map (kbd "C-c C-i") 'auto-complete)
-;; ;; 自動で補完しない
-;; (setq ac-auto-start nil)
-;; ;; yasnippetを情報源に追加する
-;; (add-to-list 'ac-sources 'ac-source-yasnippet)
-
-;; ;; 補完メニュー表示時のキーマップ
-;; (setq ac-use-menu-map t)
-;; ;; Enter, C-m で補完を終了させる
-;; ;; 改行をさせない
-;; ;;(define-key ac-menu-map [return] 'ac-complete)
-
-;; ;; html-modeでac-modeを有効にする
-;; (add-to-list 'ac-modes 'html-mode)
-;; ;; js2-modeでac-modeを有効にする
-;; (add-to-list 'ac-modes 'js2-mode)
-
-;;;; 全てのバッファーでauto-complete modeを有効にする
-;; (global-auto-complete-mode t)
-
-;;;
-;; bash-completion
-;;;
-;; (autoload 'bash-completion-dynamic-complete "bash-completion"
-;;   "BASH completion hook")
-;; (add-hook 'shell-dynamic-complete-functions
-;;           'bash-completion-dynamic-complete)
-;; (add-hook 'shell-command-complete-functions
-;;           'bash-completion-dynamic-complete)
-
 ;;;;;;;;
 ;; cargo-minor-mode
 ;;;;;;;;
-(require 'rust-mode)
-
+(require-if-not 'rust-mode)
 (add-hook 'rust-mode-hook 'cargo-minor-mode)
 
 ;;;;;;;;
@@ -415,46 +431,28 @@ See `expand-file-name'."
 ;; build by the following commands.
 ;; $ cmake -H. -Brelease -DCMAKE_BUILD_TYPE=Release
 ;; $ cmake --build release
-(require 'ccls)
+(require-if-not 'ccls)
 (setq ccls-executable (expand-file-name "~/repo/ccls.git/release/ccls"))
-
-;;;
-;; cedet, ede, semantic, etc.
-;; Ref: Emacs Part 31
-;; URL: http://pc12.2ch.net/test/read.cgi/unix/1251665639/312
-;;;
-;; Load CEDET.
-;; See cedet/common/cedet.info for configuration details.
-;; IMPORTANT: Tou must place this *before* any CEDET component (including
-;; EIEIO) gets activated by another package (Gnus, auth-source, ...).
-(let ((cedet-devel (expand-file-name "~/repo/cedet.git/cedet-devel-load.el")))
-  (when (file-exists-p cedet-devel)
-    (load-file cedet-devel)))
-;; DBファイルを一ヶ所に集約
-(setq semanticdb-default-save-directory "~/.emacs.d/semantic")
-;; disable semantic-mode and global-*-mode in CEDET
-;; CEDET conflicts js2-mode, python-mode
-(semantic-mode -1)
 
 ;;;;;;;;
 ;; clang-format
 ;;;;;;;;
-(require 'clang-format)
+(require-if-not 'clang-format)
 (setq clang-format-executable "/usr/bin/clang-format-9")
 
 ;;;
 ;; company-mode
 ;; company-*
 ;;;
-(require 'company)
+(require-if-not 'company)
 
 ;; company-backends
-(require 'company-clang)
+(require-if-not 'company-clang)
 (setq company-clang-executable (executable-find "/usr/bin/clang-9"))
 (setq company-clang--version '(normal . 9.0))
 
-(require 'company-dict)
-(require 'company-lsp)
+(require-if-not 'company-dict)
+(require-if-not 'company-lsp)
 
 (setq company-dict-dir "~/repo/nobiruwa.github/dot-emacs.d.git/company-dict")
 
@@ -490,7 +488,7 @@ See `expand-file-name'."
 ;;;;;;;;
 ;; counsel
 ;;;;;;;;
-(require 'counsel)
+(require-if-not 'counsel)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
 (global-set-key (kbd "<f1> f") 'counsel-describe-function)
@@ -500,49 +498,12 @@ See `expand-file-name'."
 (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
 (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
-
-;; ;;;
-;; ;; emacs-jedi (-> lsp-pyright)
-;; ;; Type:
-;; ;;     M-x package-install RET jedi RET
-;; ;;     M-x jedi:install-server RET
-;; ;;;
-;; (require 'python-environment)
-;; (require 'jedi)
-
-;; (setq jedi:environment-virtualenv
-;;       (append python-environment-virtualenv
-;;               '("--python" "/usr/bin/python3")))
-
-;; (defun jedi:install-server2 ()
-;;   (interactive)
-;;   (let ((python-environment-virtualenv (list "virtualenv" "--system-site-packages" "--quiet" "--python" "/usr/bin/python2.7"))
-;;         (jedi:environment-virtualenv (list "virtualenv" "--system-site-packages" "--python" "/usr/bin/python2.7"))
-;;         (jedi:environment-root "python2.7"))
-;;     (jedi:install-server)))
-;; (defun jedi:start-dedicated-server2 ()
-;;   (interactive)
-;;   (let* ((cmds '("~/.emacs.d/.python-environments/python2.7/bin/jediepcserver"))
-;;         (args '("--sys-path" "/usr/lib/python2.7/dist-packages")))
-;;     (when cmds (set (make-local-variable 'jedi:server-command) cmds))
-;;     (when args (set (make-local-variable 'jedi:server-args) args))
-;;     (setq jedi:epc nil)
-;;     (jedi:start-server)))
-;; ;;(setq jedi:key-complete (kbd "<M-tab>"))
-;; (setq jedi:key-complete (kbd "C-c C-i"))
-;; (setq jedi:key-goto-definition (kbd "C-c ."))
-;; (setq jedi:key-show-doc (kbd "C-c d"))
-;; (setq jedi:key-related-names (kbd "C-c r"))
-;; (setq jedi:goto-definition-pop-marker (kbd "C-c ,"))
-;; (setq jedi:setup-keys t)
-;; (setq jedi:get-in-function-call-delay 200)
-;; (setq jedi:complete-on-dot t)
-;; (autoload 'jedi:setup "jedi" nil t)
-;; (add-hook 'python-mode-hook 'jedi:setup)
+(global-set-key (kbd "C-c C-f") 'find-file)
 
 ;;;;;;;;
 ;;  emmet-mode
 ;;;;;;;;
+(require-if-not 'emmet-mode)
 (eval-after-load "emmet-mode"
   '(progn
      (message "[emmet] redefine emmet-preview-accpet")
@@ -579,27 +540,22 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; flycheck-mode
 ;;;;;;;;
+(require-if-not 'flycheck)
 (setq flycheck-flake8-maximum-complexity 10)
 (global-set-key (kbd "<f8>") 'flycheck-mode)
 ;;(add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;;;;;;;;
-;; ghc ( -> intero)
-;;;;;;;;
-;; (autoload 'ghc-init "ghc" nil t)
-;; (autoload 'ghc-debug "ghc" nil t)
-;; (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
-
-;;;;;;;;
 ;; god-mode
 ;;;;;;;;
+(require-if-not 'god-mode)
 (global-set-key (kbd "\C-\\") 'god-local-mode)
 
 ;;;;;;;;
 ;; graphviz-dot-mode
 ;;;;;;;;
 ;; cogre-dot-modeがgraphviz-dot-modeを発見できるようrequire
-(require 'graphviz-dot-mode)
+(require-if-not 'graphviz-dot-mode)
 (setq graphviz-dot-auto-indent-on-semi nil)
 (add-hook 'graphviz-dot-mode-hook (lambda () (auto-complete-mode)))
 
@@ -610,6 +566,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; and https://github.com/haskell/haskell-mode/wiki/Indentation
 ;; haskell-indentation-mode is the current implementataion,
 ;; but it's too buggy.
+(require-if-not 'haskell-mode)
 (add-hook 'haskell-mode-hook
           (lambda ()
             (turn-on-haskell-indentation)
@@ -618,7 +575,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; highlight-indentation
 ;;;;;;;;
-(require 'highlight-indentation)
+(require-if-not 'highlight-indentation)
 (add-hook 'python-mode-hook
           (lambda ()
             "turn on highlight-indentation-mode"
@@ -636,7 +593,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (setq howm-template-date-header "#+DATE:") ;; 独自の変数
 (setq howm-template (concat howm-view-title-header " %title%cursor\n"  howm-template-date-header " %date\n%file\n\n"))
 ;; ロード
-(require 'howm)
+(require-if-not 'howm)
 ;; キーの再割り当て
 (setq howm-prefix "\C-z,")
 ;; howm開始
@@ -730,14 +687,14 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; ;;;;;;;;
 ;; ;; intero (-> lsp-haskell)
 ;; ;;;;;;;;
-;; (require 'intero)
+;; (require-if-not 'intero)
 ;; (setq intero-blacklist '("~/haskellprojects/fay-example" "~/haskellprojects/ghcjs-example"))
 ;; (intero-global-mode 1)
 
 ;;;;;;;;
 ;; ivy-mode
 ;;;;;;;;
-(require 'ivy)
+(require-if-not 'ivy)
 ;; M-x lsp-java-generate-overrides や M-x lsp-java-spring-initializr など、複数の選択肢から選択する際に使う
 ;; ivyのキーマップには登録されていないが必要不可欠な関数なので、ここで登録する
 (define-key ivy-minibuffer-map (kbd "M-RET") 'ivy-mark)
@@ -767,7 +724,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; lsp (lsp-mode)
 ;;;;;;;;
-(require 'lsp)
+(require-if-not 'lsp)
 (setq lsp-clients-clangd-executable "/usr/bin/clangd-9")
 (setq lsp-prefer-flymake nil)
 ;; # apt-get install clang-tools-9 # libclang-devのメジャーバージョンと合わせる
@@ -778,34 +735,36 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; lsp-haskell
 ;;;;;;;;
-(require 'lsp-haskell)
+(require-if-not 'lsp-haskell)
+(when (executable-find "fourmolu")
+  (setq lsp-haskell-formatting-provider "fourmolu"))
 (add-hook 'haskell-mode-hook #'lsp)
 
 ;;;;;;;;
 ;; lsp-java
 ;; 補完が効かない場合はM-x lsp-java-update-project-configurationを試すこと
 ;;;;;;;;
-(require 'lsp-java)
+(require-if-not 'lsp-java)
 (setq lsp-java-java-path (expand-file-name "~/.jenv/shims/java"))
 (add-hook 'java-mode-hook #'lsp)
 
 ;;;;;;;;
 ;; lsp-pyright
 ;;;;;;;;
-(require 'lsp-pyright)
+(require-if-not 'lsp-pyright)
 (add-hook 'python-mode-hook #'lsp)
 
 ;; ;;;;;;;;
 ;; ;; lsp-python-ms (-> lsp-pyright)
 ;; ;;;;;;;;
-;; (require 'lsp-python-ms)
+;; (require-if-not 'lsp-python-ms)
 ;; (setq lsp-python-ms-auto-install-server t)
 ;; (add-hook 'python-mode-hook #'lsp) ; or lsp-deferred
 
 ;;;;;;;;
 ;; lsp-ui
 ;;;;;;;;
-(require 'lsp-ui)
+(require-if-not 'lsp-ui)
 ;; C-s/C-rで検索中にlsp-ui-docウィンドウが開き、検索が中断される
 ;; トグルをF5にバインドする
 (defun toggle-lsp-ui-doc ()
@@ -829,24 +788,24 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; omnisharp-mode
 ;;;;;;;;
-(when (require 'omnisharp nil 'noerror)
-  (progn
-    ;; You can install by M-x omnisharp-install-server
-    ;; but I chose install requirements manually.
-    ;; download .NET Core Binaries from: https://dotnet.microsoft.com/download/dotnet-core/2.2 and add it to PATH.
-    ;; $ wget https://roslynomnisharp.blob.core.windows.net/releases/latest/omnisharp-linux-x64.tar.gz
-    ;; $ tar -C ~/opt/omnisharp-linux-x64
-    ;; $ cd ~/opt && ln -s omnisharp-linux-x64 omnisharp
-    (setq omnisharp-server-executable-path (expand-file-name "~/opt/omnisharp/run"))
-    (add-hook 'csharp-mode-hook 'omnisharp-mode)
-    (eval-after-load
-        'company
-      '(add-to-list 'company-backends 'company-omnisharp))
-    (add-hook 'csharp-mode-hook #'company-mode)))
+(when (require-if-not 'omnisharp)
+  ;; You can install by M-x omnisharp-install-server
+  ;; but I chose install requirements manually.
+  ;; download .NET Core Binaries from: https://dotnet.microsoft.com/download/dotnet-core/2.2 and add it to PATH.
+  ;; $ wget https://roslynomnisharp.blob.core.windows.net/releases/latest/omnisharp-linux-x64.tar.gz
+  ;; $ tar -C ~/opt/omnisharp-linux-x64
+  ;; $ cd ~/opt && ln -s omnisharp-linux-x64 omnisharp
+  (setq omnisharp-server-executable-path (expand-file-name "~/opt/omnisharp/run"))
+  (add-hook 'csharp-mode-hook 'omnisharp-mode)
+  (eval-after-load
+      'company
+    '(add-to-list 'company-backends 'company-omnisharp))
+  (add-hook 'csharp-mode-hook #'company-mode))
 
 ;;;;;;;;
 ;; purescript-mode
 ;;;;;;;;
+(require-if-not 'purescript-mode)
 (add-hook 'purescript-mode-hook
           (lambda ()
             (setq haskell-literate nil)
@@ -857,41 +816,12 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; 下記URLのEmacs Lispをファイルreopen-as-root.elに保存した
 ;; Ref: http://ubulog.blogspot.com/2010/08/emacs-sudo2.html
 ;;;;;;;;
-(require 'reopen-as-root)
-
-;;;;;;;;
-;; reopen-file
-;;;;;;;;
-;; http://namazu.org/~satoru/diary/?200203c&to=200203272#200203272
-;; 編集中のファイルを開き直す
-;; - yes/no の確認が不要;;   - revert-buffer は yes/no の確認がうるさい
-;; - 「しまった! 」というときにアンドゥで元のバッファの状態に戻れる
-;;   - find-alternate-file は開き直したら元のバッファの状態に戻れない
-;;
-(defun reopen-file ()
-  "Reopen file without confirm yes/no."
-  (interactive)
-  (let ((file-name (buffer-file-name))
-        (old-supersession-threat
-         (symbol-function 'ask-user-about-supersession-threat))
-        (point (point)))
-    (when file-name
-      (fset 'ask-user-about-supersession-threat (lambda (fn)))
-      (unwind-protect
-          (progn
-            (erase-buffer)
-            (insert-file file-name)
-            (set-visited-file-modtime)
-            (goto-char point))
-        (fset 'ask-user-about-supersession-threat
-              old-supersession-threat)))))
-;; reopen-fileをC-x C-rにバインド
-(define-key ctl-x-map "\C-r"  'reopen-file)
+(require-if-not 'reopen-as-root)
 
 ;;;;;;;;
 ;; plantuml-mode
 ;;;;;;;;
-(require 'plantuml-mode)
+(require-if-not 'plantuml-mode)
 (add-hook 'plantuml-mode-hook
           (lambda ()
             (setq plantuml-jar-path (expand-file-name "~/opt/plantuml/plantuml.jar"))))
@@ -899,8 +829,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; rust-mode
 ;;;;;;;;
-(require 'rust-mode)
-
+(require-if-not 'rust-mode)
 (add-hook 'rust-mode-hook
           (lambda ()
             (setq indent-tabs-mode nil)
@@ -913,6 +842,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; skk
 ;;;;;;;;
+(require-if-not 'skk)
 ;; skk-modeが有効になると、C-jがskk-kakutei-keyにバインドされる
 ;; 使用頻度の殆どないC-oにnewlineをバインドする
 (add-hook 'skk-load-hook
@@ -935,7 +865,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; slime
 ;;;;;;;;
-(require 'slime)
+(require-if-not 'slime)
 
 ;;;;;;;;
 ;; slime-helper
@@ -1002,7 +932,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; swiper
 ;;;;;;;;
-(require 'swiper)
+(require-if-not 'swiper)
 ;; swiper use M-s as the prefix.
 (global-set-key (kbd "M-s M-s") 'swiper)
 (global-set-key (kbd "C-s") 'swiper-isearch)
@@ -1012,7 +942,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; undo-tree
 ;;;;;;;;
-(require 'undo-tree)
+(require-if-not 'undo-tree)
 (global-undo-tree-mode)
 ;; rxvt-unicode detects C-c C-/ as C-c C-_
 (define-key undo-tree-map (kbd "C-c C-/") 'undo-tree-redo)
@@ -1021,7 +951,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; vue-mode
 ;;;;;;;;
-(require 'vue-mode)
+(require-if-not 'vue-mode)
 (add-hook 'vue-mode-hook
           (lambda ()
             (setq vue-html-extra-indent 2)
@@ -1031,13 +961,13 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; wdired
 ;;;;;;;;;
-(require 'wdired)
+(require-if-not 'wdired)
 (define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
 
 ;;;;;;;;
 ;; web-mode
 ;;;;;;;;
-(require 'web-mode)
+(require-if-not 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
@@ -1058,12 +988,12 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; wgrep
 ;;;;;;;;
-(require 'wgrep nil t)
+(require-if-not 'wgrep)
 
 ;;;;;;;;
 ;; yasnippet
 ;;;;;;;;
-(require 'yasnippet)
+(require-if-not 'yasnippet)
 (setq yas-prompt-functions '(yas/ido-prompt))
 (yas-global-mode 1)
 (add-to-list 'yas-snippet-dirs
@@ -1095,7 +1025,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;ついでに，今開いているすべてのファイルを対象に grep もできる．
 ;;さらに，M-x search-buffers の後でスペースで区切って単語を入れると，
 ;;バッファの全文検索ができる．
-(require 'color-moccur)
+(require-if-not 'color-moccur)
 (setq *moccur-buffer-name-exclusion-list*
       '(".+TAGS.+" "*Completions*" "*Messages*"
         "newsrc.eld"
@@ -1128,12 +1058,12 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; color-moccur の検索結果を直接編集し，ファイルに変更を適用できる．
 ;; 関数名の変更などが簡単にできる.
 ;;(autoload 'moccur-edit "moccur-edit" "edit moccur buffer" nil t)
-(require 'moccur-edit)
+(require-if-not 'moccur-edit)
 
 ;; grep-edit -> wgrepに置き換えました。
 ;; grep の結果を編集し，その結果をもとにファイルを変更する．
 ;(autoload 'grep-edit "edit grep result" nil t)
-;; (require 'grep-edit)
+;; (require-if-not 'grep-edit)
 
 ;;;
 ;; customize font
@@ -1224,7 +1154,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 ;; 色の設定
 ;;;;;;;;
-(require 'font-lock)
+(require-if-not 'font-lock)
 (if (not (featurep 'xemacs)) (global-font-lock-mode t))
 ;; 全角スペースとかに色を付ける
 ;; 色はM-x list-color-displayで確認できる
