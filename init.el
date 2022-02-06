@@ -777,9 +777,13 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; navi2ch
 ;;;;;;;;
 (autoload 'navi2ch "navi2ch" "Navigator for 2ch for Emacs" t)
-;; オープン2chを見る C-u s で強制更新
+;; おーぷん２ちゃんねるを見る C-u s で強制更新
 (setq navi2ch-list-bbstable-url
-      "http://menu.open2ch.net/bbsmenu.html")
+      "https://menu.open2ch.net/bbsmenu.html")
+;; おーぷん２ちゃんねるがgzipを返さなくなった
+(setq navi2ch-net-accept-gzip nil)
+
+;; ２ちゃんねるとみなす掲示板をおーぷん２ちゃんねるとまちBBSに限定する
 (setq navi2ch-list-valid-host-regexp
       (concat "\\("
               (regexp-opt '(".machibbs.com" ".machi.to" ".open2ch.net"))
