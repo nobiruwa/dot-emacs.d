@@ -428,7 +428,8 @@ See `expand-file-name'."
 ;;;;;;;;
 ;; ccls
 ;;;;;;;;
-;; build by the following commands.
+;; install clang environments and build by the following commands.
+;; $ sudo apt install clang clang-format clang-tools clangd libclang-dev llvm
 ;; $ cmake -H. -Brelease -DCMAKE_BUILD_TYPE=Release
 ;; $ cmake --build release
 (require-if-not 'ccls)
@@ -438,7 +439,6 @@ See `expand-file-name'."
 ;; clang-format
 ;;;;;;;;
 (require-if-not 'clang-format)
-(setq clang-format-executable "/usr/bin/clang-format-9")
 
 ;;;
 ;; company-mode
@@ -448,9 +448,6 @@ See `expand-file-name'."
 
 ;; company-backends
 (require-if-not 'company-clang)
-(setq company-clang-executable (executable-find "/usr/bin/clang-9"))
-(setq company-clang--version '(normal . 9.0))
-
 (require-if-not 'company-dict)
 (require-if-not 'company-lsp)
 
@@ -725,10 +722,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; lsp (lsp-mode)
 ;;;;;;;;
 (require-if-not 'lsp)
-(setq lsp-clients-clangd-executable "/usr/bin/clangd-9")
 (setq lsp-prefer-flymake nil)
-;; # apt-get install clang-tools-9 # libclang-devのメジャーバージョンと合わせる
-;; C++ではclang-formatが必要
 (add-hook 'c-mode-hook #'lsp)
 (add-hook 'c++-mode-hook #'lsp)
 
