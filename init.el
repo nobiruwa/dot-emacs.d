@@ -523,8 +523,14 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
        (emmet-preview-abort))
      ))
 
-(add-hook 'html-mode-hook 'emmet-mode)
-(add-hook 'web-mode-hook 'emmet-mode)
+(add-hook 'html-mode-hook
+          (lambda ()
+            (setq-local emmet-self-closing-tag-style "")
+            (emmet-mode)))
+(add-hook 'web-mode-hook
+          (lambda ()
+            (setq-local emmet-self-closing-tag-style "")
+            (emmet-mode)))
 (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
 (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
 (add-hook 'emmet-mode-hook
@@ -725,6 +731,8 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (setq lsp-prefer-flymake nil)
 (add-hook 'c-mode-hook #'lsp)
 (add-hook 'c++-mode-hook #'lsp)
+;; rust
+(setq lsp-rust-analyzer-proc-macro-enable t)
 
 ;;;;;;;;
 ;; lsp-haskell
