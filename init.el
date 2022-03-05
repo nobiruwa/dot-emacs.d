@@ -486,16 +486,17 @@ See `expand-file-name'."
 ;; counsel
 ;;;;;;;;
 (require-if-not 'counsel)
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "<f1> f") 'counsel-describe-function)
-(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-(global-set-key (kbd "<f1> o") 'counsel-describe-symbol)
-(global-set-key (kbd "<f1> l") 'counsel-find-library)
-(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-(define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
-(global-set-key (kbd "C-c C-f") 'find-file)
+(with-eval-after-load "counsel"
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+  (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+  (global-set-key (kbd "<f1> o") 'counsel-describe-symbol)
+  (global-set-key (kbd "<f1> l") 'counsel-find-library)
+  (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+  (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+  (global-set-key (kbd "C-c C-f") 'find-file))
 
 ;;;;;;;;
 ;;  emmet-mode
@@ -545,14 +546,16 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 (require-if-not 'flycheck)
 (setq flycheck-flake8-maximum-complexity 10)
-(global-set-key (kbd "<f8>") 'flycheck-mode)
+(with-eval-after-load "flycheck"
+    (global-set-key (kbd "<f8>") 'flycheck-mode))
 ;;(add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;;;;;;;;
 ;; god-mode
 ;;;;;;;;
 (require-if-not 'god-mode)
-(global-set-key (kbd "\C-\\") 'god-local-mode)
+(with-eval-after-load "god-mode"
+  (global-set-key (kbd "\C-\\") 'god-local-mode))
 
 ;;;;;;;;
 ;; graphviz-dot-mode
@@ -600,7 +603,8 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; キーの再割り当て
 (setq howm-prefix "\C-z,")
 ;; howm開始
-(global-set-key "\C-z,," 'howm-menu)
+(with-eval-after-load "howm-mode"
+  (global-set-key "\C-z,," 'howm-menu))
 ;; メニューの言語
 (setq howm-menu-lang 'en)
 ;;ファイルの関連付け
@@ -864,9 +868,10 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (setq skk-aux-large-jisyo nil)
 ;; ▽モードと▼モード時のアンドゥ情報を記録しない
 (setq skk-undo-kakutei-word-only t)
-;; C-x j のskk-auto-fill-modeは使わない
-(global-set-key "\C-xj" 'skk-mode)
-(global-set-key "\C-x\C-j" 'skk-mode)
+(with-eval-after-load "skk"
+  ;; C-x j のskk-auto-fill-modeは使わない
+  (global-set-key "\C-xj" 'skk-mode)
+  (global-set-key "\C-x\C-j" 'skk-mode))
 
 ;;;;;;;;
 ;; slime
@@ -939,11 +944,12 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; swiper
 ;;;;;;;;
 (require-if-not 'swiper)
-;; swiper use M-s as the prefix.
-(global-set-key (kbd "M-s M-s") 'swiper)
-(global-set-key (kbd "C-s") 'swiper-isearch)
-(global-set-key (kbd "C-r") 'swiper-isearch-backward)
-(global-set-key (kbd "M-s s") 'swiper-thing-at-point)
+(with-eval-after-load "swiper"
+  ;; swiper use M-s as the prefix.
+  (global-set-key (kbd "M-s M-s") 'swiper)
+  (global-set-key (kbd "C-s") 'swiper-isearch)
+  (global-set-key (kbd "C-r") 'swiper-isearch-backward)
+  (global-set-key (kbd "M-s s") 'swiper-thing-at-point))
 
 ;;;;;;;;
 ;; undo-tree
