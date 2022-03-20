@@ -979,6 +979,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; rxvt-unicode detects C-c C-/ as C-c C-_
 (define-key undo-tree-map (kbd "C-c C-/") 'undo-tree-redo)
 (define-key undo-tree-map (kbd "C-c C-_") 'undo-tree-redo)
+(setq undo-tree-auto-save-history nil)
 
 ;;;;;;;;
 ;; vue-mode
