@@ -7,7 +7,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(cmake-mode yasnippet-snippets yasnippet-classic-snippets yaml-mode xclip wgrep web-mode vue-mode undo-tree typescript-mode tidal solarized-theme shakespeare-mode rust-mode restclient purescript-mode powershell plantuml-mode nginx-mode navi2ch magit lua-mode lsp-ui lsp-pyright lsp-java lsp-haskell js2-mode idomenu howm groovy-mode graphviz-dot-mode gradle-mode god-mode flycheck-pyflakes emmet-mode elpy elm-mode dockerfile-mode ddskk counsel company-dict coffee-mode clang-format ccls cargo browse-kill-ring bash-completion ac-slime)))
+   '(ac-slime bash-completion browse-kill-ring cargo ccls clang-format cmake-mode coffee-mode company-dict counsel ddskk dockerfile-mode elm-mode elpy emmet-mode flycheck-pyflakes god-mode gradle-mode graphviz-dot-mode groovy-mode howm idomenu js2-mode lsp-haskell lsp-java lsp-pyright lsp-ui lua-mode magit navi2ch nginx-mode plantuml-mode powershell purescript-mode restclient rust-mode shakespeare-mode solarized-theme tidal typescript-mode undo-tree vue-mode web-mode wgrep xclip yaml-mode yasnippet-classic-snippets yasnippet-snippets))
+ '(safe-local-variable-values
+   '((eval setq-local lsp-pyright-venv-path
+           (expand-file-name "~/.venvs")))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
