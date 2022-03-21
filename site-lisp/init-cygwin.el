@@ -101,10 +101,10 @@
 ;;;
 ;; skk
 ;;;
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/site-lisp/skk"))
+(add-to-list 'load-path (expand-file-name "site-lisp/skk" user-emacs-directory))
 (require 'skk-autoloads nil t)
 (setq skk-egg-like-newline t)
-(setq skk-large-jisyo "~/.emacs.d/leim/SKK-DIC/SKK-JISYO.L")
+(setq skk-large-jisyo (expand-file-name "leim/SKK-DIC/SKK-JISYO.L" user-emacs-directory))
 (global-set-key "\C-x\C-j" 'skk-mode)
 ;; ▽モードと▼モード時のアンドゥ情報を記録しない
 (setq skk-undo-kakutei-word-only t)
