@@ -595,8 +595,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (require-if-not 'haskell-mode)
 (add-hook 'haskell-mode-hook
           (lambda ()
-            (turn-on-haskell-indentation)
-            (setq haskell-indent-offset 2)))
+            (turn-on-haskell-indentation)))
 
 ;;;;;;;;
 ;; highlight-indentation
@@ -762,9 +761,36 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; lsp-haskell
 ;;;;;;;;
 (require-if-not 'lsp-haskell)
-(when (executable-find "fourmolu")
-  (setq lsp-haskell-formatting-provider "fourmolu"))
-(add-hook 'haskell-mode-hook #'lsp)
+(setq lsp-haskell-formatting-provider "brittany")
+
+;; rust-modeを参考にバッファーを保存する時にフォーマットする
+(defcustom haskell-format-on-save nil
+  "Format future haskell buffers before saving using lsp-haskell-formatting-provider."
+  :type 'boolean
+  :safe #'booleanp
+  :group 'lsp-haskell-mode)
+
+(defun haskell-enable-format-on-save ()
+  "Enable formatting using lsp-haskell-formatting-provider when saving buffer."
+  (interactive)
+  (setq-local haskell-format-on-save t))
+
+(defun haskell-disable-format-on-save ()
+  "Disable formatting using lsp-haskell-formatting-provider when saving buffer."
+  (interactive)
+  (setq-local haskell-format-on-save nil))
+
+(defun haskell-format-save-hook ()
+  "Enable formatting using lsp-haskell-formatting-provider when saving buffer."
+  (when haskell-format-on-save
+      (lsp-format-buffer)))
+
+(add-hook 'before-save-hook #'haskell-format-save-hook)
+
+(add-hook 'haskell-mode-hook
+          (lambda ()
+            (setq-local haskell-format-on-save t)
+            (lsp)))
 
 ;;;;;;;;
 ;; lsp-java
