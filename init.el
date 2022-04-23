@@ -785,6 +785,10 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
   (when haskell-format-on-save
       (lsp-format-buffer)))
 
+;; lsp-format-buffer, lsp-format-regionが使用するインデント幅を
+;; haskell-modeのhaskell-indentation-layout-offsetに合わせる
+(add-to-list 'lsp--formatting-indent-alist '(haskell-mode . haskell-indentation-layout-offset))
+
 (add-hook 'before-save-hook #'haskell-format-save-hook)
 
 (add-hook 'haskell-mode-hook
