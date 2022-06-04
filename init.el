@@ -593,6 +593,14 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; haskell-indentation-mode is the current implementataion,
 ;; but it's too buggy.
 (require-if-not 'haskell-mode)
+
+;; flycheck標準のhaskell用checkersを使わない
+(setq flycheck-checkers
+      (cl-reduce
+       (lambda (acc x) (remove x acc))
+       '(haskell-stack-ghc haskell-ghc haskell-hlint)
+       :initial-value flycheck-checkers))
+
 (add-hook 'haskell-mode-hook
           (lambda ()
             (turn-on-haskell-indentation)))
