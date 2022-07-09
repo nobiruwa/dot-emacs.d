@@ -216,9 +216,9 @@ This requires xclip command."
 ;;;;;;;;
 ;; java-mode
 ;;;;;;;;
-(add-hook 'java-mode-hook '(lambda ()
-                             (setq indent-tabs-mode nil)
-                             (setq c-basic-offset 4)))
+(add-hook 'java-mode-hook (lambda ()
+                            (setq indent-tabs-mode nil)
+                            (setq c-basic-offset 4)))
 
 ;;;;;;;;
 ;; mouse, mwheel
@@ -547,7 +547,7 @@ See `expand-file-name'."
 ;;  emmet-mode
 ;;;;;;;;
 (require-if-not 'emmet-mode)
-(eval-after-load "emmet-mode"
+(with-eval-after-load "emmet-mode"
   '(progn
      (message "[emmet] redefine emmet-preview-accpet")
      (defun emmet-preview-accept
@@ -754,12 +754,13 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; ivy-mode
 ;;;;;;;;
 (require-if-not 'ivy)
-;; M-x lsp-java-generate-overrides や M-x lsp-java-spring-initializr など、複数の選択肢から選択する際に使う
-;; ivyのキーマップには登録されていないが必要不可欠な関数なので、ここで登録する
-(define-key ivy-minibuffer-map (kbd "M-RET") 'ivy-mark)
-;; `./`と`../`を先頭に表示する必要はない
-;; リストの末尾に置けるならばよかったのだが
-(setq ivy-extra-directories nil)
+(with-eval-after-load "ivy"
+  ;; M-x lsp-java-generate-overrides や M-x lsp-java-spring-initializr など、複数の選択肢から選択する際に使う
+  ;; ivyのキーマップには登録されていないが必要不可欠な関数なので、ここで登録する
+  (define-key ivy-minibuffer-map (kbd "M-RET") 'ivy-mark)
+  ;; `./`と`../`を先頭に表示する必要はない
+  ;; リストの末尾に置けるならばよかったのだが
+  (setq ivy-extra-directories nil))
 
 ;;;;;;;;
 ;; js-mode
@@ -784,11 +785,12 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; lsp (lsp-mode)
 ;;;;;;;;
 (require-if-not 'lsp)
-(setq lsp-prefer-flymake nil)
-(add-hook 'c-mode-hook #'lsp)
-(add-hook 'c++-mode-hook #'lsp)
-;; rust
-(setq lsp-rust-analyzer-proc-macro-enable t)
+(with-eval-after-load "lsp"
+  (setq lsp-prefer-flymake nil)
+  (add-hook 'c-mode-hook #'lsp)
+  (add-hook 'c++-mode-hook #'lsp)
+  ;; rust
+  (setq lsp-rust-analyzer-proc-macro-enable t))
 
 ;;;;;;;;
 ;; lsp-haskell
@@ -834,14 +836,16 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; 補完が効かない場合はM-x lsp-java-update-project-configurationを試すこと
 ;;;;;;;;
 (require-if-not 'lsp-java)
-(setq lsp-java-java-path (expand-file-name "~/.jenv/shims/java"))
-(add-hook 'java-mode-hook #'lsp)
+(with-eval-after-load "lsp-java"
+  (setq lsp-java-java-path (expand-file-name "~/.jenv/shims/java"))
+  (add-hook 'java-mode-hook #'lsp))
 
 ;;;;;;;;
 ;; lsp-pyright
 ;;;;;;;;
 (require-if-not 'lsp-pyright)
-(add-hook 'python-mode-hook #'lsp)
+(with-eval-after-load "lsp-pyright"
+  (add-hook 'python-mode-hook #'lsp))
 
 ;; ;;;;;;;;
 ;; ;; lsp-python-ms (-> lsp-pyright)
@@ -854,13 +858,14 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; lsp-ui
 ;;;;;;;;
 (require-if-not 'lsp-ui)
-;; C-s/C-rで検索中にlsp-ui-docウィンドウが開き、検索が中断される
-;; トグルをF5にバインドする
-(defun toggle-lsp-ui-doc ()
-  (interactive)
-  (progn (lsp-ui-doc-enable (not lsp-ui-doc-enable))
-         (setq lsp-ui-doc-enable (not lsp-ui-doc-enable))))
-(define-key lsp-mode-map (kbd "<f5>") 'toggle-lsp-ui-doc)
+(with-eval-after-load "lsp-ui"
+  ;; C-s/C-rで検索中にlsp-ui-docウィンドウが開き、検索が中断される
+  ;; トグルをF5にバインドする
+  (defun toggle-lsp-ui-doc ()
+    (interactive)
+    (progn (lsp-ui-doc-enable (not lsp-ui-doc-enable))
+           (setq lsp-ui-doc-enable (not lsp-ui-doc-enable))))
+  (define-key lsp-mode-map (kbd "<f5>") 'toggle-lsp-ui-doc))
 
 ;;;;;;;;
 ;; navi2ch
@@ -899,10 +904,11 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; purescript-mode
 ;;;;;;;;
 (require-if-not 'purescript-mode)
-(add-hook 'purescript-mode-hook
-          (lambda ()
-            (setq haskell-literate nil)
-            (haskell-indentation-mode)))
+(with-eval-after-load "purescript-mode"
+  (add-hook 'purescript-mode-hook
+            (lambda ()
+              (setq haskell-literate nil)
+            (haskell-indentation-mode))))
 
 ;;;;;;;;
 ;; reopen-as-root
@@ -926,11 +932,11 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (add-hook 'rust-mode-hook
           (lambda ()
             (setq indent-tabs-mode nil)
-            (lsp)))
+            (lsp))
 
-;; Formatting is bound to C-c C-f.
-;; The folowing enables automatic formatting on save.
-(setq rust-format-on-save t)
+  ;; Formatting is bound to C-c C-f.
+  ;; The folowing enables automatic formatting on save.
+  (setq rust-format-on-save t))
 
 ;;;;;;;;
 ;; skk
@@ -939,7 +945,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; skk-modeが有効になると、C-jがskk-kakutei-keyにバインドされる
 ;; 使用頻度の殆どないC-oにnewlineをバインドする
 (add-hook 'skk-load-hook
-          '(lambda ()
+          (lambda ()
              (progn
                (if (functionp 'electric-newline-and-maybe-indent)
                    (progn
@@ -1038,11 +1044,12 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; undo-tree
 ;;;;;;;;
 (require-if-not 'undo-tree)
-(global-undo-tree-mode)
-;; rxvt-unicode detects C-c C-/ as C-c C-_
-(define-key undo-tree-map (kbd "C-c C-/") 'undo-tree-redo)
-(define-key undo-tree-map (kbd "C-c C-_") 'undo-tree-redo)
-(setq undo-tree-auto-save-history nil)
+(with-eval-after-load "undo-tree"
+  (global-undo-tree-mode)
+  ;; rxvt-unicode detects C-c C-/ as C-c C-_
+  (define-key undo-tree-map (kbd "C-c C-/") 'undo-tree-redo)
+  (define-key undo-tree-map (kbd "C-c C-_") 'undo-tree-redo)
+  (setq undo-tree-auto-save-history nil))
 
 ;;;;;;;;
 ;; vue-mode
@@ -1058,21 +1065,23 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; wdired
 ;;;;;;;;;
 (require-if-not 'wdired)
-(define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
+(with-eval-after-load "wdired"
+  (define-key dired-mode-map "r" 'wdired-change-to-wdired-mode))
 
 ;;;;;;;;
 ;; web-mode
 ;;;;;;;;
 (require-if-not 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.[s]?css\\'" . web-mode))
+(with-eval-after-load "web-mode"
+  (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.[s]?css\\'" . web-mode)))
 (add-hook 'web-mode-hook (lambda ()
                            (progn
                              (auto-fill-mode -1)
@@ -1090,11 +1099,12 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; yasnippet
 ;;;;;;;;
 (require-if-not 'yasnippet)
-(setq yas-prompt-functions '(yas/ido-prompt))
-(yas-global-mode 1)
-(add-to-list 'yas-snippet-dirs
-             (expand-file-name "~/repo/nobiruwa.github/yasnippet-snippets.git"))
-(yas-load-directory (expand-file-name "~/repo/nobiruwa.github/yasnippet-snippets.git"))
+(with-eval-after-load "yasnippet"
+  (setq yas-prompt-functions '(yas/ido-prompt))
+  (yas-global-mode 1)
+  (add-to-list 'yas-snippet-dirs
+               (expand-file-name "~/repo/nobiruwa.github/yasnippet-snippets.git"))
+  (yas-load-directory (expand-file-name "~/repo/nobiruwa.github/yasnippet-snippets.git")))
 
 ;; あるバッファで YASnippet マイナーモードを OFF にしたい
 ;;(set-default 'yas/dont-activate
@@ -1122,29 +1132,30 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;さらに，M-x search-buffers の後でスペースで区切って単語を入れると，
 ;;バッファの全文検索ができる．
 (require-if-not 'color-moccur)
+(with-eval-after-load "color-moccur"
+  (define-key Buffer-menu-mode-map "O" 'Buffer-menu-moccur)
+  (define-key dired-mode-map "O" 'dired-do-moccur))
 (setq *moccur-buffer-name-exclusion-list*
       '(".+TAGS.+" "*Completions*" "*Messages*"
         "newsrc.eld"
         " *migemo*" ".bbdb"))
 (setq dmoccur-exclusion-mask
       (append (remove "\\.git/.+" dmoccur-exclusion-mask) '("/\\.git/.+")))
-(define-key Buffer-menu-mode-map "O" 'Buffer-menu-moccur)
 (setq dmoccur-use-list t)
 (setq dmoccur-use-project t)
 (setq dmoccur-list
       '(
-        ;(任意の名前 実際のディレクトリ 検索したいファイルの正規表現 オプション)
+        ;;(任意の名前 実際のディレクトリ 検索したいファイルの正規表現 オプション)
         ("dir" default-directory (".*") dir)
         ("current" default-directory (".*") nil)
         ;;("soft" "~/www/soft/" ("\\.texi$") nil)
         ;;("config" "~/mylisp/"  ("\\.js" "\\.el$") nil)
         ;;("1.99" "d:/unix/Meadow2/1.99a6/" (".*") sub)
         ))
-(define-key dired-mode-map "O" 'dired-do-moccur)
 (setq moccur-split-word t)
 (setq color-moccur-default-ime-status nil)
 ;;(global-set-key "\C-c\C-x\C-o" 'moccur)
-;別のキーバインドにしたい
+;;別のキーバインドにしたい
 ;;(global-set-key "\C-c\C-o" 'search-buffers)
 ;; If this value is t, cursor motion in the moccur-grep buffer causes
 ;; automatic display of the corresponding source code location.
@@ -1270,7 +1281,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (ad-enable-advice 'font-lock-mode 'before 'my-font-lock-mode)
 (ad-activate 'font-lock-mode)
 (add-hook 'find-file-hooks
-          '(lambda () (if font-lock-mode nil (font-lock-mode t))))
+          (lambda () (if font-lock-mode nil (font-lock-mode t))))
 
 (if (not (or (eq system-type 'cygwin) (eq window-system 'x)))
     (progn (show-paren-mode 1)
