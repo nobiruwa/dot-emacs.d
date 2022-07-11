@@ -724,9 +724,9 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;           (lambda ()
 ;;             (jit-lock-register 'howm-add-day-of-week-overlay-region)))
 
-; (add-hook 'howm-view-summary-mode-hook
-;     (lambda ()
-;             (jit-lock-register 'howm-add-day-of-week-overlay-region)))
+;; (add-hook 'howm-view-summary-mode-hook
+;;     (lambda ()
+;;             (jit-lock-register 'howm-add-day-of-week-overlay-region)))
 
 ;; howm-mode-hook
 (add-hook 'howm-mode-hook
@@ -1002,22 +1002,22 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; solarized-theme
 ;;;;;;;;
 ;; make the fringe stand out from the background
-;(setq solarized-distinct-fringe-background t)
+;; (setq solarized-distinct-fringe-background t)
 
 ;; Don't change the font for some headings and titles
 (setq solarized-use-variable-pitch nil)
 
 ;; make the modeline high contrast
-;(setq solarized-high-contrast-mode-line t)
+;; (setq solarized-high-contrast-mode-line t)
 
 ;; Use less bolding
-;(setq solarized-use-less-bold t)
+;; (setq solarized-use-less-bold t)
 
 ;; Use more italics
-;(setq solarized-use-more-italic t)
+;; (setq solarized-use-more-italic t)
 
 ;; Use less colors for indicators such as git:gutter, flycheck and similar
-;(setq solarized-emphasize-indicators nil)
+;; (setq solarized-emphasize-indicators nil)
 
 ;; Don't change size of org-mode headlines (but keep other size-changes)
 (setq solarized-scale-org-headlines nil)
@@ -1164,12 +1164,12 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; moccur-edit.el
 ;; color-moccur の検索結果を直接編集し，ファイルに変更を適用できる．
 ;; 関数名の変更などが簡単にできる.
-;;(autoload 'moccur-edit "moccur-edit" "edit moccur buffer" nil t)
+;; (autoload 'moccur-edit "moccur-edit" "edit moccur buffer" nil t)
 (require-if-not 'moccur-edit)
 
 ;; grep-edit -> wgrepに置き換えました。
 ;; grep の結果を編集し，その結果をもとにファイルを変更する．
-;(autoload 'grep-edit "edit grep result" nil t)
+;; (autoload 'grep-edit "edit grep result" nil t)
 ;; (require-if-not 'grep-edit)
 
 ;;;
