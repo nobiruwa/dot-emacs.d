@@ -789,6 +789,10 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
   (setq lsp-prefer-flymake nil)
   (add-hook 'c-mode-hook #'lsp)
   (add-hook 'c++-mode-hook #'lsp)
+  ;; performance
+  ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
+  (setq read-process-output-max (* 1024 1024)) ;; 1mb
+  (setq gc-cons-threshold 100000000)
   ;; rust
   (setq lsp-rust-analyzer-proc-macro-enable t))
 
