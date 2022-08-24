@@ -156,6 +156,13 @@ This requires xclip command."
     (load "my-utf-8-eaw-fullwidth_cygwin")
     (load "my-utf-8-eaw-fullwidth"))
 
+;;;;;;;;
+;; Native Compile
+;;;;;;;;
+(when (and (functionp 'native-comp-available-p) (native-comp-available-p))
+  ;; コンパイル時の警告やエラーを出力するとき*Warning*バッファのウィンドウをポップアップさせない
+  (setq native-comp-async-report-warnings-errors 'silent))
+
 ;;;;;;;;;;;;;; Emacs 標準Lisp ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;
 ;; all CC Mode modes
