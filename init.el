@@ -275,6 +275,7 @@ This requires xclip command."
 ;;;;;;;;
 ;; shell-mode
 ;;;;;;;;
+(require 'shell)
 ;; *shell*バッファを現在のウィンドウで開く
 (add-to-list 'display-buffer-alist
              '("^\\*shell\\*\\(<[0-9]+>\\)?$" . (display-buffer-same-window)))
