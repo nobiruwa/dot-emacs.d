@@ -312,6 +312,49 @@ This requires xclip command."
             ;; "../" "./"を後ろに回す
             (setq-local company-transformers '(company--sort-with-making-special-name-at-the-end))))
 
+;;;
+;; shell-modeにおいて、company-modeのcomapny-capfが実行ファイル名の解決を行うとき
+;; 探索するディレクトリを制限します。
+;;;
+(defcustom shell-command-ignored-exec-path-regexp "/mnt/.*"
+  "a REGEXP to be ignored when searching executables from `exec-path' directories."
+  :type 'regexp)
+
+(defvar shell-command-original-exec-path nil
+  "the original exec-path value before running shell-command-completion.")
+
+(defun deep-copy-sequence (x)
+  "Make a deep copy of the given sequence X."
+  (mapcar #'copy-sequence x))
+
+(defun shell-command-backup-exec-path ()
+  "backup `exec-path'"
+  (setq shell-command-original-exec-path (deep-copy-sequence exec-path)))
+
+(defun shell-command-remove-from-exec-path ()
+  "remove elements matching `shell-command-ignored-exec-path-regexp' from `exec-path'"
+  (cl-delete-if
+   (lambda (path)
+     (string-match-p shell-command-ignored-exec-path-regexp path)) exec-path))
+
+(defun shell-command-restore-exec-path (&rest args)
+  "restore `exec-path' from `shell-command-ignored-exec-path-regexp'"
+  (when shell-command-original-exec-path
+    (setq exec-path shell-command-original-exec-path)
+    (setq shell-command-original-exec-path nil)))
+
+(defun shell-command-comint-completion-at-point-around (orig-func &rest args)
+  "An advice function which change `exec-path' during calling ORIG-FUNC. Restores `exec-path' at the end. It works only in shell-mode."
+  (when (derived-mode-p 'shell-mode)
+    (shell-command-backup-exec-path)
+    (shell-command-remove-from-exec-path)
+    (let ((res (ignore-errors (apply orig-func args))))
+      (shell-command-restore-exec-path)
+      res)))
+
+;; To enable this, uncomment the following line.
+;; (advice-add 'comint-completion-at-point :around #'shell-command-comint-completion-at-point-around)
+
 ;;;;;;;;
 ;; uniquify
 ;; Ref: http://q.hatena.ne.jp/1137478760 の回答24
