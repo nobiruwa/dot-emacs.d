@@ -840,6 +840,9 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
   (setq lsp-prefer-flymake nil)
   (add-hook 'c-mode-hook #'lsp)
   (add-hook 'c++-mode-hook #'lsp)
+  ;; core
+  ;; https://emacs-lsp.github.io/lsp-mode/page/settings/mode/
+  (setq lsp-keep-workspace-alive nil)
   ;; performance
   ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
