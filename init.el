@@ -854,7 +854,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; lsp-haskell
 ;;;;;;;;
 (require-if-not 'lsp-haskell)
-(setq lsp-haskell-formatting-provider "brittany")
+(setq lsp-haskell-formatting-provider "fourmolu")
 
 ;; rust-modeを参考にバッファーを保存する時にフォーマットする
 (defcustom haskell-format-on-save nil
