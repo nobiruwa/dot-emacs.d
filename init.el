@@ -848,7 +848,23 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
   (setq gc-cons-threshold 100000000)
   ;; rust
-  (setq lsp-rust-analyzer-proc-macro-enable t))
+  (setq lsp-rust-analyzer-proc-macro-enable t)
+  ;; modelineにprogressトークンのメッセージが溜まっていくことがある
+  ;; 手動でクリアできるようにする
+  (defun my-lsp-clear-workspace-work-done-tokens ()
+    "Clear lsp--workspace-work-done-tokens."
+    (interactive)
+    (let ((workspaces? (lsp-workspaces)))
+      (when (and (listp workspaces?) (> (length workspaces?) 0))
+        (let* ((cur-workspace (cl-first workspaces?))
+               (cur-workdone-tokens (lsp--workspace-work-done-tokens cur-workspace)))
+          (when (hash-table-p cur-workdone-tokens)
+            (clrhash cur-workdone-tokens))))))
+  ;; 簡単にサーバーを再起動できるようにする
+  (define-key lsp-mode-map (kbd "<f5>") 'lsp-workspace-restart)
+  ;; 簡単にmodelineをリフレッシュできるようにする
+  (define-key lsp-mode-map (kbd "<f6>") 'my-lsp-clear-workspace-work-done-tokens)
+  )
 
 ;;;;;;;;
 ;; lsp-haskell
@@ -918,12 +934,12 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (require-if-not 'lsp-ui)
 (with-eval-after-load "lsp-ui"
   ;; C-s/C-rで検索中にlsp-ui-docウィンドウが開き、検索が中断される
-  ;; トグルをF5にバインドする
+  ;; トグルをF7にバインドする
   (defun toggle-lsp-ui-doc ()
     (interactive)
     (progn (lsp-ui-doc-enable (not lsp-ui-doc-enable))
            (setq lsp-ui-doc-enable (not lsp-ui-doc-enable))))
-  (define-key lsp-mode-map (kbd "<f5>") 'toggle-lsp-ui-doc))
+  (define-key lsp-mode-map (kbd "<f7>") 'toggle-lsp-ui-doc))
 
 ;;;;;;;;
 ;; navi2ch
@@ -1311,7 +1327,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;
 ;; customize theme, color
 ;;;
-(if (eq window-system 'x)
+(if (or (eq window-system 'x) (eq window-system 'w32))
     (if (package-installed-p 'solarized-theme)
         (load-theme 'solarized-dark t)
       (load-theme 'tango-dark t)))
