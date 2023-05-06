@@ -260,6 +260,8 @@ This requires xclip command."
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives
+             '("gnu-devel" . "https://elpa.gnu.org/devel/") t)
 ;; Emacs 27から、パッケージはinit.elのロードよりも前にロードされるようになり、
 ;; package-initializeを呼ぶ必要はなくなりました。
 (when (< emacs-major-version 27)
@@ -271,6 +273,53 @@ This requires xclip command."
   (when (cl-find-if-not #'package-installed-p package-selected-packages)
     (package-refresh-contents)
     (mapc #'package-install package-selected-packages)))
+
+;;;;;;;;
+;; project.el
+;;;;;;;;
+(require 'project)
+
+;; プロジェクトを探す関数
+;; Ref: https://christiantietze.de/posts/2022/03/mark-local-project.el-directories/
+;; Ref: https://www.reddit.com/r/emacs/comments/lfbyq5/comment/ivyzm0q/?utm_source=share&utm_medium=web2x&context=3
+;; Ref: https://andreyorst.gitlab.io/posts/2022-07-16-project-el-enhancements/
+(defcustom project-root-markers
+  '(;; add file identifier below
+    ;; General
+    ".project"
+    ;; C/C++
+    "meson.build"
+    ;; Haskell
+    "cabal.project"
+    "stack.yaml"
+    ;; Java
+    "build.gradle"
+    ;; Python
+    "pyrightconfig.json"
+    ;; Rust
+    "Cargo.toml"
+    )
+  "Files or directories that indicate the root of a project."
+  :type '(repeat string)
+  :group 'project)
+
+(defun project-root-p (path)
+  "Check if the current PATH has any of the project root markers."
+  (catch 'found
+    (dolist (marker project-root-markers)
+      (when (file-exists-p (concat path marker))
+        (throw 'found marker)))))
+
+(defun project-find-root (path)
+  "Search up the PATH for `project-root-markers'."
+  (let ((path (expand-file-name path)))
+    (catch 'found
+      (while (not (equal "/" path))
+        (if (not (project-root-p path))
+            (setq path (file-name-directory (directory-file-name path)))
+          (throw 'found (cons 'transient path)))))))
+
+(add-to-list 'project-find-functions #'project-find-root)
 
 ;;;;;;;;
 ;; shell-mode
@@ -595,6 +644,36 @@ See `expand-file-name'."
   (global-set-key (kbd "C-c C-f") 'find-file))
 
 ;;;;;;;;
+;; eglot
+;;;;;;;;
+(require-if-not 'eglot)
+(with-eval-after-load "eglot"
+  (setq eglot-autoshutdown t)
+  ;; C/C++
+  ;; git cloneしてソースからビルドする
+  (add-to-list 'eglot-server-programs
+               `(c-mode . (,(expand-file-name "~/repo/ccls.git/release/ccls"))))
+  (add-to-list 'eglot-server-programs
+               `(c++-mode . (,(expand-file-name "~/repo/ccls.git/release/ccls"))))
+  ;; Java
+  ;; git cloneしてソースからビルドする
+  (add-to-list 'eglot-server-programs
+               `(java-mode . (,(expand-file-name "~/repo/java-language-server.git/dist/lang_server_linux.sh"))))
+  ;; Python
+  ;; npmでインストールする
+  ;; $ mkdir ~/opt/pyright
+  ;; $ cd ~/opt/pyright
+  ;; $ npm init
+  ;; $ npm -g --prefix ~/opt/pyright install pyright
+  (add-to-list 'eglot-server-programs
+               `(python-mode . (,(expand-file-name "~/opt/pyright/bin/pyright-langserver") "--stdio")))
+  (setq-default eglot-workspace-configuration
+                (list
+                 :haskell '(:formattingProvider "fourmolu")
+                 :java #s(hash-table)
+                 :python `(:venvPath ,(expand-file-name "~/.venvs")))))
+
+;;;;;;;;
 ;;  emmet-mode
 ;;;;;;;;
 (require-if-not 'emmet-mode)
@@ -677,9 +756,38 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
        '(haskell-stack-ghc haskell-ghc haskell-hlint)
        :initial-value flycheck-checkers))
 
+;; rust-modeを参考にバッファーを保存する時にフォーマットする
+(defcustom haskell-format-on-save nil
+  "Format future haskell buffers before saving."
+  :type 'boolean
+  :safe #'booleanp
+  :group 'haskell-mode)
+
+(defun haskell-enable-format-on-save ()
+  "Enable formatting when saving buffer."
+  (interactive)
+  (setq-local haskell-format-on-save t))
+
+(defun haskell-disable-format-on-save ()
+  "Disable formatting when saving buffer."
+  (interactive)
+  (setq-local haskell-format-on-save nil))
+
+(defun haskell-format-save-hook ()
+  "Enable formatting when saving buffer."
+  (when haskell-format-on-save
+    (cond ((bound-and-true-p eglot--managed-mode)
+           (eglot-format-buffer))
+          ((bound-and-true-p lsp-mode)
+           (lsp-format-buffer)))))
+
+(add-hook 'before-save-hook #'haskell-format-save-hook)
+
 (add-hook 'haskell-mode-hook
           (lambda ()
-            (turn-on-haskell-indentation)))
+            (turn-on-haskell-indentation)
+            (setq-local tab-width 2)
+            (setq-local haskell-format-on-save t)))
 
 ;;;;;;;;
 ;; highlight-indentation
@@ -838,8 +946,6 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (require-if-not 'lsp)
 (with-eval-after-load "lsp"
   (setq lsp-prefer-flymake nil)
-  (add-hook 'c-mode-hook #'lsp)
-  (add-hook 'c++-mode-hook #'lsp)
   ;; core
   ;; https://emacs-lsp.github.io/lsp-mode/page/settings/mode/
   (setq lsp-keep-workspace-alive nil)
@@ -871,39 +977,9 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 (require-if-not 'lsp-haskell)
 (setq lsp-haskell-formatting-provider "fourmolu")
-
-;; rust-modeを参考にバッファーを保存する時にフォーマットする
-(defcustom haskell-format-on-save nil
-  "Format future haskell buffers before saving using lsp-haskell-formatting-provider."
-  :type 'boolean
-  :safe #'booleanp
-  :group 'lsp-haskell-mode)
-
-(defun haskell-enable-format-on-save ()
-  "Enable formatting using lsp-haskell-formatting-provider when saving buffer."
-  (interactive)
-  (setq-local haskell-format-on-save t))
-
-(defun haskell-disable-format-on-save ()
-  "Disable formatting using lsp-haskell-formatting-provider when saving buffer."
-  (interactive)
-  (setq-local haskell-format-on-save nil))
-
-(defun haskell-format-save-hook ()
-  "Enable formatting using lsp-haskell-formatting-provider when saving buffer."
-  (when haskell-format-on-save
-      (lsp-format-buffer)))
-
 ;; lsp-format-buffer, lsp-format-regionが使用するインデント幅を
 ;; haskell-modeのhaskell-indentation-layout-offsetに合わせる
 (add-to-list 'lsp--formatting-indent-alist '(haskell-mode . haskell-indentation-layout-offset))
-
-(add-hook 'before-save-hook #'haskell-format-save-hook)
-
-(add-hook 'haskell-mode-hook
-          (lambda ()
-            (setq-local haskell-format-on-save t)
-            (lsp)))
 
 ;;;;;;;;
 ;; lsp-java
@@ -912,21 +988,23 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (require-if-not 'lsp-java)
 (with-eval-after-load "lsp-java"
   (setq lsp-java-java-path (expand-file-name "~/.jenv/shims/java"))
-  (add-hook 'java-mode-hook #'lsp))
+  )
 
 ;;;;;;;;
 ;; lsp-pyright
 ;;;;;;;;
 (require-if-not 'lsp-pyright)
 (with-eval-after-load "lsp-pyright"
-  (add-hook 'python-mode-hook #'lsp))
+  )
 
 ;; ;;;;;;;;
 ;; ;; lsp-python-ms (-> lsp-pyright)
 ;; ;;;;;;;;
 ;; (require-if-not 'lsp-python-ms)
-;; (setq lsp-python-ms-auto-install-server t)
-;; (add-hook 'python-mode-hook #'lsp) ; or lsp-deferred
+;; (with-eval-after-load "lsp-python-ms"
+;;   (setq lsp-python-ms-auto-install-server t)
+;;   )
+
 
 ;;;;;;;;
 ;; lsp-ui
@@ -1006,7 +1084,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 (add-hook 'rust-mode-hook
           (lambda ()
             (setq indent-tabs-mode nil)
-            (lsp))
+            )
 
   ;; Formatting is bound to C-c C-f.
   ;; The folowing enables automatic formatting on save.
