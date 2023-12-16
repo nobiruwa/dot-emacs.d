@@ -312,12 +312,14 @@ This requires xclip command."
 
 (defun project-find-root (path)
   "Search up the PATH for `project-root-markers'."
-  (let ((path (expand-file-name path)))
-    (catch 'found
-      (while (not (equal "/" path))
-        (if (not (project-root-p path))
-            (setq path (file-name-directory (directory-file-name path)))
-          (throw 'found (cons 'transient path)))))))
+  ;; trampで扱うファイルはスキップする
+  (when (not (tramp-tramp-file-p path))
+    (let ((path (expand-file-name path)))
+      (catch 'found
+        (while (not (equal "/" path))
+          (if (not (project-root-p path))
+              (setq path (file-name-directory (directory-file-name path)))
+            (throw 'found (cons 'transient path))))))))
 
 (add-to-list 'project-find-functions #'project-find-root)
 
