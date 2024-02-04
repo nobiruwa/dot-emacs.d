@@ -1333,6 +1333,10 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; Ref: https://qiita.com/melito/items/238bdf72237290bc6e42
 ;; Ref: http://misohena.jp/blog/2017-09-26-symbol-font-settings-for-emacs25.html
 ;; Ref: https://www.reddit.com/r/emacs/comments/ggd90c/color_emoji_in_emacs_27/
+(defvar user--default-font-size 18
+  "Default font size.
+カスタマイズする際はdefvarを~/.init_env_pre.elで定義してください。")
+
 (defvar user--cjk-font "VL Gothic"
   "Default font for CJK characters")
 
@@ -1368,33 +1372,33 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
   ;; unicodeに対してuser--cjk-fontがグリフを持っていればそれを使い、
   ;; 持っていない場合にはuser--unicode-fontで補完する
   (set-fontset-font user--standard-fontset 'unicode
-                    (font-spec :family user--cjk-font)
+                    (font-spec :family user--cjk-font :size user--default-font-size)
                     nil)
   (set-fontset-font user--standard-fontset 'unicode
-                    (font-spec :family user--unicode-font)
+                    (font-spec :family user--unicode-font :size user--default-font-size)
                     nil 'append)
   ;; latinに対してuser--latin-fontを使う
   (set-fontset-font user--standard-fontset 'latin
-                    (font-spec :family user--latin-font)
+                    (font-spec :family user--latin-font :size user--default-font-size)
                     nil 'prepend)
   ;; CJKに対してuser--cjk-fontを使う
   (dolist (charset '(kana han cjk-misc hangul kanbun bopomofo))
     (set-fontset-font user--standard-fontset charset
-                  (font-spec :family user--cjk-font)
+                  (font-spec :family user--cjk-font :size user--default-font-size)
                   nil 'prepend))
   ;; symbolに対してuser--unicode-emoji-fontを使う
-  (set-fontset-font t 'symbol user--unicode-emoji-font nil 'append)
+  (set-fontset-font t 'symbol (format "%s-%s" user--unicode-emoji-font user--default-font-size) nil 'append)
   ;; TODO 日本語フォントではU+2018とU+2019は全角幅だがWeb上の英文ではアポストロフィに使われていて
   ;; 見栄えが悪い。現状は全角で表示し必要に応じてU+0027に置換する。よい方法はないものか。
   (dolist (charset '((#x2018 . #x2019)    ;; Curly single quotes "‘’"
                      (#x201c . #x201d)))  ;; Curly double quotes "“”"
     (set-fontset-font user--standard-fontset charset
-                      (font-spec :family user--cjk-font)
+                      (font-spec :family user--cjk-font :size user--default-font-size)
                       nil)) ; 上書きするために第5引数ADDは省略する
   ;; フォールバックフォントを用いる言語(charsetは C-u C-x = のscriptセクションの名前を用いる)
   (dolist (charset '(bengali bengali-akruti bengali-cdac))
     (set-fontset-font user--standard-fontset charset
-                      (font-spec :family user--unicode-font-fallback)
+                      (font-spec :family user--unicode-font-fallback :size user--default-font-size)
                       nil 'prepend)))
 
 (when window-system
