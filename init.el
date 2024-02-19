@@ -313,7 +313,8 @@ This requires xclip command."
 (defun project-find-root (path)
   "Search up the PATH for `project-root-markers'."
   ;; trampで扱うファイルはスキップする
-  (when (not (tramp-tramp-file-p path))
+  (when (not (and (fboundp 'tramp-tramp-file-p)
+             (tramp-tramp-file-p path)))
     (let ((path (expand-file-name path)))
       (catch 'found
         (while (not (equal "/" path))
