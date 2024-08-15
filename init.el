@@ -644,7 +644,7 @@ See `expand-file-name'."
   (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
   (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
   (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
-  (global-set-key (kbd "C-c C-f") 'find-file))
+  (global-set-key (kbd "C-c f") 'find-file))
 
 ;;;;;;;;
 ;; eglot
