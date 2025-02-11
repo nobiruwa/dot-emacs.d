@@ -661,9 +661,10 @@ See `expand-file-name'."
   (add-to-list 'eglot-server-programs
                `(c++-mode . (,(expand-file-name "~/repo/ccls.git/release/ccls"))))
   ;; Java
+  ;; java-language-serverを用いる場合:
   ;; git cloneしてソースからビルドする
-  (add-to-list 'eglot-server-programs
-               `(java-mode . (,(expand-file-name "~/repo/java-language-server.git/dist/lang_server_linux.sh"))))
+  ;; (add-to-list 'eglot-server-programs
+  ;;              `(java-mode . (,(expand-file-name "~/repo/java-language-server.git/dist/lang_server_linux.sh"))))
   ;; Python
   ;; npmでインストールする
   ;; $ mkdir ~/opt/pyright
@@ -677,6 +678,20 @@ See `expand-file-name'."
                  :haskell '(:formattingProvider "fourmolu")
                  :java #s(hash-table)
                  :python `(:venvPath ,(expand-file-name "~/.venvs")))))
+
+;;;;;;;;
+;; eglot-java
+;;;;;;;;
+(require-if-not 'eglot-java)
+;; (add-hook 'java-mode-hook 'eglot-java-mode)
+(with-eval-after-load 'eglot-java
+
+  (define-key eglot-java-mode-map (kbd "C-c l n") #'eglot-java-file-new)
+  (define-key eglot-java-mode-map (kbd "C-c l x") #'eglot-java-run-main)
+  (define-key eglot-java-mode-map (kbd "C-c l t") #'eglot-java-run-test)
+  (define-key eglot-java-mode-map (kbd "C-c l N") #'eglot-java-project-new)
+  (define-key eglot-java-mode-map (kbd "C-c l T") #'eglot-java-project-build-task)
+  (define-key eglot-java-mode-map (kbd "C-c l R") #'eglot-java-project-build-refresh))
 
 ;;;;;;;;
 ;;  emmet-mode
