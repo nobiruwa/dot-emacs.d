@@ -934,6 +934,9 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 (require-if-not 'ivy)
 (with-eval-after-load "ivy"
+  ;; use timer to improve the ivy-read performance #1218
+  ;; https://github.com/abo-abo/swiper/issues/1218
+  (setq ivy-dynamic-exhibit-delay-ms 250)
   ;; M-x lsp-java-generate-overrides や M-x lsp-java-spring-initializr など、複数の選択肢から選択する際に使う
   ;; ivyのキーマップには登録されていないが必要不可欠な関数なので、ここで登録する
   (define-key ivy-minibuffer-map (kbd "M-RET") 'ivy-mark)
