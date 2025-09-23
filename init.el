@@ -637,14 +637,15 @@ See `expand-file-name'."
 ;;;;;;;;
 (require-if-not 'counsel)
 (with-eval-after-load "counsel"
-  (global-set-key (kbd "M-x") 'counsel-M-x)
-  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-  (global-set-key (kbd "<f1> f") 'counsel-describe-function)
-  (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-  (global-set-key (kbd "<f1> o") 'counsel-describe-symbol)
-  (global-set-key (kbd "<f1> l") 'counsel-find-library)
-  (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-  (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+  ;; counsel and swiper use M-s as the prefix.
+  (global-set-key (kbd "M-s M-x") 'counsel-M-x)
+  (global-set-key (kbd "M-s M-f") 'counsel-find-file)
+  (global-set-key (kbd "M-s <f1> f") 'counsel-describe-function)
+  (global-set-key (kbd "M-s <f1> v") 'counsel-describe-variable)
+  (global-set-key (kbd "M-s <f1> o") 'counsel-describe-symbol)
+  (global-set-key (kbd "M-s <f1> l") 'counsel-find-library)
+  (global-set-key (kbd "M-s <f2> i") 'counsel-info-lookup-symbol)
+  (global-set-key (kbd "M-s <f2> u") 'counsel-unicode-char)
   (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
   (global-set-key (kbd "C-c f") 'find-file))
 
@@ -1211,10 +1212,10 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;;;;;;;;
 (require-if-not 'swiper)
 (with-eval-after-load "swiper"
-  ;; swiper use M-s as the prefix.
+  ;; counsel and swiper use M-s as the prefix.
   (global-set-key (kbd "M-s M-s") 'swiper)
-  (global-set-key (kbd "C-s") 'swiper-isearch)
-  (global-set-key (kbd "C-r") 'swiper-isearch-backward)
+  (global-set-key (kbd "M-s C-s") 'swiper-isearch)
+  (global-set-key (kbd "M-s C-r") 'swiper-isearch-backward)
   (global-set-key (kbd "M-s s") 'swiper-thing-at-point))
 
 ;;;;;;;;
