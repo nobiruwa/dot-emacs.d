@@ -1357,6 +1357,7 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 ;; Ref: https://qiita.com/melito/items/238bdf72237290bc6e42
 ;; Ref: http://misohena.jp/blog/2017-09-26-symbol-font-settings-for-emacs25.html
 ;; Ref: https://www.reddit.com/r/emacs/comments/ggd90c/color_emoji_in_emacs_27/
+;; Ref: https://www.reddit.com/r/emacs/comments/yhhqym/comment/iudzxr1/
 (defvar user--default-font-size 18
   "Default font size.
 カスタマイズする際はdefvarを~/.init_env_pre.elで定義してください。")
@@ -1390,6 +1391,8 @@ Temporarily, bind expr to the return value of emmet-expr-on-line."
 
 (defun user--set-font ()
   "Set Unicode, Latin and CJK font for user--standard-fontset."
+  ;; fixed-pitchにはデフォルトのフォントを使いたい
+  (set-face-attribute 'fixed-pitch nil :family 'unspecified :inherit 'default)
   ;; 記号にはデフォルトのフォントではなく指定のフォントを使いたい
   (setq use-default-font-for-symbols nil)
   (create-fontset-from-ascii-font user--cjk-font nil (replace-regexp-in-string "fontset-" "" user--standard-fontset))
